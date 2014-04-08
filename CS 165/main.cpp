@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <ctime>
 
-#define MEMOIZED_TYPE int
+#define MEMOIZED_TYPE long long
 
 /* Forward declarations for compare functions. */
 int COMPARE(int arg1, int arg2, ...);
@@ -11,7 +11,7 @@ double dshrandom(long input);
 /* Constants */
 const int MaxN = 10000;
 const int MaxK = 40;
-const int RunsPerCase = 10000;
+const int RunsPerCase = 1000;
 
 /* Data structures */
 // Will hold the indices of the k greatest elements in descending order.
@@ -57,35 +57,49 @@ struct Case
 int main()
 {
 	Case cases[] = { Case(15, 3), Case(100, 10), Case(1000, 20), Case(10000, 40) };
+	
+	time_t seed = std::time(nullptr);
+	dshrandom(std::time(nullptr));
+	printf("Seed from std::time() call is: %d.\n", seed);
 
-	for (int c = 0; c < 4; c++)
+	for (int j = 0; j < 1; j++)
 	{
-		int maxComparisons = 0,
-			totalComparisons = 0;
+		printf("%-8s%-5s%-8s%-8s\n", "n", "k", "Max.", "Avg.");
+		for (int i = 0; i < 8 + 5 + 8 + 8; i++)
+			printf("-");
+		printf("\n");
 
-		for (int i = 0; i < RunsPerCase; i++)
+		std::memset(memoizedComparisons, 0, MaxN * MaxN);
+
+		for (int c = 0; c < 4; c++)
 		{
-			dshrandom(std::time(nullptr));
-			doalg(cases[c].n, cases[c].k);
-			memoizedBase += 2;
+			int maxComparisons = 0,
+				totalComparisons = 0;
 
-			int result = COMPARE(-1, cases[c].k, best);
-
-			if (result == -1)
-				printf("k (%d) is out of range.\n", cases[c].k);
-			else if (result == -1000)
-				printf("doalg() failed to return the correct indices for the %d greatest elements.\n", cases[c].k);
-			else
+			for (int i = 0; i < RunsPerCase; i++)
 			{
-				if (result > maxComparisons)
-					maxComparisons = result;
-				totalComparisons += result;
+				doalg(cases[c].n, cases[c].k);
+				memoizedBase += 2;
+
+				int result = COMPARE(-1, cases[c].k, best);
+
+				if (result == -1)
+					printf("k (%d) is out of range.\n", cases[c].k);
+				else if (result == -1000)
+					printf("doalg() failed to return the correct indices for the %d greatest elements.\n", cases[c].k);
+				else
+				{
+					if (result > maxComparisons)
+						maxComparisons = result;
+					totalComparisons += result;
+				}
 			}
+
+			printf("%-8d%-5d%-8d%-8.2f\n", cases[c].n, cases[c].k, maxComparisons, totalComparisons / (double)RunsPerCase);
 		}
-
-		printf("For n=%d and k=%d, max comparisons is %d and average comparisons is %f.\n\n", cases[c].n, cases[c].k, maxComparisons, totalComparisons / (double)RunsPerCase);
+		printf("\n");
 	}
-
+	
 	getchar();
 
 	return 0;
