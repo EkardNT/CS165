@@ -7,15 +7,11 @@
 // Will hold the indices of the k greatest elements in descending order.
 int best[MAX_K + 1]; 
 
-
-
 /* Status variables */
 // Total number of elements that are currently being searched.
 int n = 0;
 // Number of elements that must be found.
 int k = 0;
-
-
 
 /* Operations */
 void init_alg(int n, int k);
@@ -69,7 +65,7 @@ int main()
 				}
 			}
 
-			printf("%-8d%-5d%-8d%-8.2f\n", cases[c].n, cases[c].k, maxComparisons, totalComparisons / (double)RUNS_PER_CASE);
+			printf("%-8d%-5d%-8d%-8.3f\n", cases[c].n, cases[c].k, maxComparisons, totalComparisons / (double)RUNS_PER_CASE);
 		}
 		printf("\n");
 	}
