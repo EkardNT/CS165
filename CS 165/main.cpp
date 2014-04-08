@@ -2,7 +2,7 @@
 #include <cstdio>
 #include <ctime>
 
-#define MEMOIZED_TYPE char
+#define MEMOIZED_TYPE int
 
 /* Forward declarations for compare functions. */
 int COMPARE(int arg1, int arg2, ...);
@@ -11,7 +11,7 @@ double dshrandom(long input);
 /* Constants */
 const int MaxN = 10000;
 const int MaxK = 40;
-const int RunsPerCase = 100;
+const int RunsPerCase = 10000;
 
 /* Data structures */
 // Will hold the indices of the k greatest elements in descending order.
@@ -62,7 +62,6 @@ int main()
 	{
 		int maxComparisons = 0,
 			totalComparisons = 0;
-		memoizedBase = 0;
 
 		for (int i = 0; i < RunsPerCase; i++)
 		{
@@ -109,9 +108,6 @@ void init_alg(int n, int k)
 	std::memset(best, 0, k + 1);
 	std::memset(heap, 0, k);
 	heapSize = 0;
-	// Clear memoized comparisons.
-	for (int i = 0; i < n * n; i++)
-		memoizedComparisons[i] = 0;
 	
 	COMPARE(0, n);
 }
@@ -134,9 +130,9 @@ bool greater_than(int index1, int index2)
 {
 	index1--;
 	index2--;
-	MEMOIZED_TYPE memoized = memoizedComparisons[index1 + index2 * n];
+	MEMOIZED_TYPE memoized = memoizedComparisons[index1 + index2 * n] - memoizedBase;
 	// Already computed?
-	if (memoized >(MEMOIZED_TYPE)0)
+	if (memoized > (MEMOIZED_TYPE)0)
 		return memoized == (MEMOIZED_TYPE)1;
 	// Otherwise, compute and check return value for error.
 	int result = COMPARE(index1 + 1, index2 + 1);
@@ -146,8 +142,8 @@ bool greater_than(int index1, int index2)
 		return false;
 	}
 	// Record the result in both possible locations.
-	memoizedComparisons[index1 + index2 * n] = (MEMOIZED_TYPE)result;
-	memoizedComparisons[index2 + index1 * n] = (MEMOIZED_TYPE)(result == 1 ? 2 : 1);
+	memoizedComparisons[index1 + index2 * n] = (MEMOIZED_TYPE)result + memoizedBase;
+	memoizedComparisons[index2 + index1 * n] = (MEMOIZED_TYPE)(result == 1 ? 2 : 1) + memoizedBase;
 	return result == 1;
 }
 
