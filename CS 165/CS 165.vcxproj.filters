@@ -27,6 +27,9 @@
     <ClCompile Include="memoization.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="bst.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="definitions.h">

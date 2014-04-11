@@ -20,4 +20,12 @@ bool greater_than(int index1, int index2);
 void memo_increment();
 void memo_clear();
 
+/* BST functions */
+namespace bst
+{
+	void init();
+	void push(int element);
+	void get_descending_order(int* dest, int offset);
+}
+
 #endif

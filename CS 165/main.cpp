@@ -5,7 +5,8 @@
 
 /* Data structures */
 // Will hold the indices of the k greatest elements in descending order.
-int best[MAX_K + 1]; 
+int best[MAX_K + 1];
+int shuffledIndices[MAX_N];
 
 /* Status variables */
 // Total number of elements that are currently being searched.
@@ -31,7 +32,7 @@ int main()
 	time_t seed = std::time(nullptr);
 	dshrandom(std::time(nullptr));
 	printf("Seed from std::time() call is: %d.\n", seed);
-
+	
 	for (int j = 0; j < 1; j++)
 	{
 		printf("%-8s%-5s%-8s%-8s\n", "n", "k", "Max.", "Avg.");
@@ -88,9 +89,22 @@ void init_alg(int n, int k)
 	::n = n;
 	::k = k;
 
-	// Clear best array and heap.
+	// Clear best array and bst.
 	std::memset(best, 0, k + 1);
-	heap_init();
+	bst::init();
+
+	// Fill shuffled array.
+	for (int i = 0; i < n; i++)
+		shuffledIndices[i] = i + 1;
+	// Do Fisher-Yates shuffle.
+	for (int i = n; i >= 1; i--){
+		int j = (int)(i*dshrandom(0) + 1);
+		if (j != i) {
+			int t = shuffledIndices[i - 1];
+			shuffledIndices[i - 1] = shuffledIndices[j - 1];
+			shuffledIndices[j - 1] = t;
+		}
+	}
 	
 	COMPARE(0, n);
 }
@@ -100,11 +114,10 @@ void doalg(int n, int k)
 	init_alg(n, k);
 
 	// Add all indices to heap. Remember indices start at 1.
-	for (int i = 1; i <= n; i++)
-		heap_push(i);
+	for (int i = 0; i < n; i++)
+		bst::push(shuffledIndices[i]);
 
 	// Remove k elements from heap and put them in descending
 	// order in the best array.
-	for (int i = 0; i < k; i++)
-		best[k - i] = heap_pop();
+	bst::get_descending_order(best, 1);
 }
