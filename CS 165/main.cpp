@@ -63,7 +63,7 @@ int main(int argc, const char ** argv)
 		printf("-");
 	printf("\n");
 
-	memo_clear();
+	proofs::program_init();
 
 	for (int c = 0; c < sizeof(cases) / sizeof(cases[0]); c++)
 	{
@@ -75,7 +75,6 @@ int main(int argc, const char ** argv)
 		for (int i = 0; i < RUNS_PER_CASE; i++)
 		{
 			doalg(cases[c].n, cases[c].k);
-			memo_increment();
 
 			int result = COMPARE(-1, cases[c].k, best);
 
@@ -155,6 +154,7 @@ void init_alg(int n, int k)
 	// Clear best array and bst.
 	std::memset(best, 0, k + 1);
 	bst::init();
+	proofs::init();
 
 	// Fill shuffled array.
 	for (int i = 0; i < n; i++)

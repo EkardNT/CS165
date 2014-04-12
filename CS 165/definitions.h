@@ -10,14 +10,19 @@
 #define nullptr NULL
 #endif
 
-/* Instructor-provided comparison and random functions */
-int COMPARE(int arg1, int arg2, ...);
+/* Instructor-provided random function */
 double dshrandom(long input);
+/* Instructor-provided comparison function. */
+int COMPARE(int arg1, int arg2, ...);
 
-/* Memoization functions */
-bool greater_than(int index1, int index2);
-void memo_increment();
-void memo_clear();
+/* Relational proof functions */
+namespace proofs
+{
+	void program_init();
+	void init();
+	bool greater(int expectedGreaterIndex, int expectedLesserIndex);
+	bool lesser(int expectedLesserIndex, int expectedGreaterIndex);
+}
 
 /* BST functions */
 namespace bst
