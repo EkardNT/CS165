@@ -3,7 +3,7 @@
 
 #define MEMOIZED_TYPE long long
 #define MAX_N 10000
-#define MAX_K 40
+#define MAX_K 500
 #define RUNS_PER_CASE 1000
 
 /* Instructor-provided comparison and random functions */

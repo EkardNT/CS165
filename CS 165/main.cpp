@@ -1,7 +1,11 @@
 #include <cstring>
 #include <cstdio>
+#include <chrono>
 #include <ctime>
 #include "definitions.h"
+
+typedef std::chrono::high_resolution_clock Clock;
+typedef std::chrono::milliseconds millis;
 
 /* Data structures */
 // Will hold the indices of the k greatest elements in descending order.
@@ -27,53 +31,83 @@ struct Case
 
 int main()
 {
-	Case cases[] = { Case(15, 3), Case(100, 10), Case(1000, 20), Case(10000, 40) };
+	Case cases[] = 
+	{
+		Case(15, 3),
+		Case(15, 5),
+		Case(15, 10),
+		Case(15, 15),
+		Case(100, 10),
+		Case(100, 50),
+		Case(100, 80),
+		Case(100, 100),
+		Case(1000, 20),
+		Case(1000, 40),
+		Case(1000, 100),
+		Case(1000, 200),
+		Case(1000, 500),
+		Case(10000, 40), 
+		Case(10000, 200),
+		Case(10000, 500)
+	};
 	
 	time_t seed = std::time(nullptr);
-	dshrandom(std::time(nullptr));
+	dshrandom(seed);
 	printf("Seed from std::time() call is: %d.\n", seed);
 	
-	for (int j = 0; j < 1; j++)
+	Clock::time_point programStartTime = Clock::now();
+
+	printf("%-8s%-5s%-8s%-8s%-13s%-6s\n", "n", "k", "Min.", "Max.", "Avg.", "Time (ms)");
+	for (int i = 0; i < 55; i++)
+		printf("-");
+	printf("\n");
+
+	memo_clear();
+
+	for (int c = 0; c < sizeof(cases) / sizeof(cases[0]); c++)
 	{
-		printf("%-8s%-5s%-8s%-8s%-8s\n", "n", "k", "Min.", "Max.", "Avg.");
-		for (int i = 0; i < 8 + 5 + 8 + 8 + 8; i++)
-			printf("-");
-		printf("\n");
+		int maxComparisons = 0,
+			minComparisons = 1000000,
+			totalComparisons = 0;
+		Clock::time_point caseStartTime = Clock::now();
 
-		memo_clear();
-
-		for (int c = 0; c < 4; c++)
+		for (int i = 0; i < RUNS_PER_CASE; i++)
 		{
-			int maxComparisons = 0,
-				minComparisons = 1000000,
-				totalComparisons = 0;
+			doalg(cases[c].n, cases[c].k);
+			memo_increment();
 
-			for (int i = 0; i < RUNS_PER_CASE; i++)
+			int result = COMPARE(-1, cases[c].k, best);
+
+			if (result == -1)
+				printf("k (%d) is out of range.\n", cases[c].k);
+			else if (result == -1000)
+				printf("doalg() failed to return the correct indices for the %d greatest elements.\n", cases[c].k);
+			else
 			{
-				doalg(cases[c].n, cases[c].k);
-				memo_increment();
-
-				int result = COMPARE(-1, cases[c].k, best);
-
-				if (result == -1)
-					printf("k (%d) is out of range.\n", cases[c].k);
-				else if (result == -1000)
-					printf("doalg() failed to return the correct indices for the %d greatest elements.\n", cases[c].k);
-				else
-				{
-					if (result > maxComparisons)
-						maxComparisons = result;
-					if (result < minComparisons)
-						minComparisons = result;
-					totalComparisons += result;
-				}
+				if (result > maxComparisons)
+					maxComparisons = result;
+				if (result < minComparisons)
+					minComparisons = result;
+				totalComparisons += result;
 			}
-
-			printf("%-8d%-5d%-8d%-8d%-8.3f\n", cases[c].n, cases[c].k, minComparisons, maxComparisons, totalComparisons / (double)RUNS_PER_CASE);
 		}
-		printf("\n");
+		
+		printf(
+			"%-8d%-5d%-8d%-8d%-13.3f%-6d\n", 
+			cases[c].n, 
+			cases[c].k, 
+			minComparisons, 
+			maxComparisons, 
+			totalComparisons / (double)RUNS_PER_CASE, 
+			std::chrono::duration_cast<millis>(Clock::now() - caseStartTime).count());
 	}
+	printf("\n");
 	
+	printf(
+		"Took %.2f seconds to run all cases %d times each.\n", 
+		std::chrono::duration_cast<millis>(Clock::now() - programStartTime).count() / 1000.0,
+		RUNS_PER_CASE);
+
 	getchar();
 
 	return 0;
