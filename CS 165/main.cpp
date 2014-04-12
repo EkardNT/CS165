@@ -35,8 +35,8 @@ int main()
 	
 	for (int j = 0; j < 1; j++)
 	{
-		printf("%-8s%-5s%-8s%-8s\n", "n", "k", "Max.", "Avg.");
-		for (int i = 0; i < 8 + 5 + 8 + 8; i++)
+		printf("%-8s%-5s%-8s%-8s%-8s\n", "n", "k", "Min.", "Max.", "Avg.");
+		for (int i = 0; i < 8 + 5 + 8 + 8 + 8; i++)
 			printf("-");
 		printf("\n");
 
@@ -45,6 +45,7 @@ int main()
 		for (int c = 0; c < 4; c++)
 		{
 			int maxComparisons = 0,
+				minComparisons = 1000000,
 				totalComparisons = 0;
 
 			for (int i = 0; i < RUNS_PER_CASE; i++)
@@ -62,11 +63,13 @@ int main()
 				{
 					if (result > maxComparisons)
 						maxComparisons = result;
+					if (result < minComparisons)
+						minComparisons = result;
 					totalComparisons += result;
 				}
 			}
 
-			printf("%-8d%-5d%-8d%-8.3f\n", cases[c].n, cases[c].k, maxComparisons, totalComparisons / (double)RUNS_PER_CASE);
+			printf("%-8d%-5d%-8d%-8d%-8.3f\n", cases[c].n, cases[c].k, minComparisons, maxComparisons, totalComparisons / (double)RUNS_PER_CASE);
 		}
 		printf("\n");
 	}
