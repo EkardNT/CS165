@@ -2,6 +2,8 @@
 #include <cstdio>
 #include <chrono>
 #include <ctime>
+#include <cerrno>
+#include <cstdlib>
 #include "definitions.h"
 
 typedef std::chrono::high_resolution_clock Clock;
@@ -22,6 +24,7 @@ int k = 0;
 void init_alg(int n, int k);
 void doalg(int n, int k);
 void printArray(int * arr, int count);
+long int getSeed(int argc, const char ** argv);
 
 struct Case
 {
@@ -29,7 +32,7 @@ struct Case
 	Case(int n, int k) : n(n), k(k) {}
 };
 
-int main()
+int main(int argc, const char ** argv)
 {
 	Case cases[] = 
 	{
@@ -51,13 +54,11 @@ int main()
 		Case(10000, 500)
 	};
 	
-	time_t seed = std::time(nullptr);
-	dshrandom(seed);
-	printf("Seed from std::time() call is: %d.\n", seed);
-	
+	dshrandom(getSeed(argc, argv));
+		
 	Clock::time_point programStartTime = Clock::now();
 
-	printf("%-8s%-5s%-8s%-8s%-13s%-6s\n", "n", "k", "Min.", "Max.", "Avg.", "Time (ms)");
+	printf("\n%-8s%-5s%-8s%-8s%-13s%-6s\n", "n", "k", "Min.", "Max.", "Avg.", "Time (ms)");
 	for (int i = 0; i < 55; i++)
 		printf("-");
 	printf("\n");
@@ -109,6 +110,33 @@ int main()
 		RUNS_PER_CASE);
 
 	return 0;
+}
+
+long int getSeed(int argc, const char ** argv)
+{
+	if (argc > 1)
+	{
+		char * endChar = nullptr;
+		const int Radix = 0;
+		long int result = strtol(argv[1], &endChar, Radix);
+		if (result == 0 || errno == ERANGE)
+		{
+			result = (long int)std::time(nullptr);
+			printf("Invalid seed argument. Substituted seed from std::time() call: %d\n", result);
+			return result;
+		}
+		else
+		{
+			printf("Using provided seed: %d\n", result);
+			return result;
+		}
+	}
+	else
+	{
+		long int timeVal = (long int)std::time(nullptr);
+		printf("Seed from std::time() call: %d\n", timeVal);
+		return (long int)timeVal;
+	}
 }
 
 void printArray(int * arr, int count)
