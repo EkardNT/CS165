@@ -10,11 +10,6 @@
 int COMPARE(int arg1, int arg2, ...);
 double dshrandom(long input);
 
-/* Heap functions */
-void heap_init();
-void heap_push(int element);
-int heap_pop();
-
 /* Memoization functions */
 bool greater_than(int index1, int index2);
 void memo_increment();

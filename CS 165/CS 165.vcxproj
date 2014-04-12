@@ -78,7 +78,6 @@
   <ItemGroup>
     <ClCompile Include="bst.cpp" />
     <ClCompile Include="compare.cpp" />
-    <ClCompile Include="heap.cpp" />
     <ClCompile Include="main.cpp" />
     <ClCompile Include="memoization.cpp" />
   </ItemGroup>
