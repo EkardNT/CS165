@@ -6,6 +6,10 @@
 #define MAX_K 500
 #define RUNS_PER_CASE 1000
 
+#ifdef __GNUC__
+#define nullptr NULL
+#endif
+
 /* Instructor-provided comparison and random functions */
 int COMPARE(int arg1, int arg2, ...);
 double dshrandom(long input);

@@ -108,8 +108,6 @@ int main()
 		std::chrono::duration_cast<millis>(Clock::now() - programStartTime).count() / 1000.0,
 		RUNS_PER_CASE);
 
-	getchar();
-
 	return 0;
 }
 
