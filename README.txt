@@ -16,10 +16,10 @@ ALGORITHM/DATA STRUCTURE:
 	We also memoized our comparisons, so that no pair of elements are ever submitted to COMPARE() more than once.
 	
 TIME ANALYSIS:
-	todo
+	It is immediately apparent that our algorithm is at least O(n), because we insert each of the n indices into our binary search tree. Normally each insertion into the binary search tree would be an O(log n) comparison operation, however our binary search tree is restricted in size to no greater than k, so each insertion is an O(log k) operation. After all indices have been added to the binary search tree, we traverse the entire tree in reverse order to add the greatest k elements to the Best array. Thus, the asymptotic time complexity is O(n * log(k) + k).
 
 TIMING FUNCTION:
 	todo
 
 SPACE ANALYSIS:
-	todo
+	Our solution requires Θ(k) space, both for the output Best array and the binary search tree which may have at most k elements.
