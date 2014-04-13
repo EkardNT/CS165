@@ -12,7 +12,6 @@ typedef std::chrono::milliseconds millis;
 /* Data structures */
 // Will hold the indices of the k greatest elements in descending order.
 int best[MAX_K + 1];
-int shuffledIndices[MAX_N];
 
 /* Status variables */
 // Total number of elements that are currently being searched.
@@ -152,20 +151,7 @@ void init_alg(int n, int k)
 	// Clear best array and bst.
 	std::memset(best, 0, k + 1);
 	bst::init();
-
-	// Fill shuffled array.
-	for (int i = 0; i < n; i++)
-		shuffledIndices[i] = i + 1;
-	// Do Fisher-Yates shuffle.
-	for (int i = n; i >= 1; i--){
-		int j = (int)(i*dshrandom(0) + 1);
-		if (j != i) {
-			int t = shuffledIndices[i - 1];
-			shuffledIndices[i - 1] = shuffledIndices[j - 1];
-			shuffledIndices[j - 1] = t;
-		}
-	}
-	
+		
 	COMPARE(0, n);
 }
 
@@ -174,8 +160,8 @@ void doalg(int n, int k)
 	init_alg(n, k);
 
 	// Add all indices to heap. Remember indices start at 1.
-	for (int i = 0; i < n; i++)
-		bst::push(shuffledIndices[i]);
+	for (int i = 1; i <= n; i++)
+		bst::push(i);
 
 	// Remove k elements from heap and put them in descending
 	// order in the best array.
