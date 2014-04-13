@@ -71,6 +71,7 @@ int main(int argc, const char ** argv)
 			minComparisons = 1000000,
 			totalComparisons = 0;
 		Clock::time_point caseStartTime = Clock::now();
+		proofs::case_init();
 
 		for (int i = 0; i < RUNS_PER_CASE; i++)
 		{
@@ -100,6 +101,11 @@ int main(int argc, const char ** argv)
 			maxComparisons, 
 			totalComparisons / (double)RUNS_PER_CASE, 
 			std::chrono::duration_cast<millis>(Clock::now() - caseStartTime).count());
+		long long totalRequests = proofs::getTotalRequests();
+		long long totalHits = proofs::getTotalHits();
+		double avgHits = totalHits / (double)RUNS_PER_CASE;
+		double avgRequests = totalRequests / (double)RUNS_PER_CASE;
+		printf("total hits: %d\ntotal requests: %d\navg hits: %f\navg requests: %f\n", (int)totalHits, (int)totalRequests, avgHits, avgRequests);
 	}
 	printf("\n");
 	

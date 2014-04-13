@@ -18,6 +18,9 @@ int COMPARE(int arg1, int arg2, ...);
 /* Relational proof functions */
 namespace proofs
 {
+	void case_init();
+	long long getTotalRequests();
+	long long getTotalHits();
 	void program_init();
 	void init();
 	bool greater(int expectedGreaterIndex, int expectedLesserIndex);
