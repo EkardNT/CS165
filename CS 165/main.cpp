@@ -62,16 +62,13 @@ int main(int argc, const char ** argv)
 	for (int i = 0; i < 55; i++)
 		printf("-");
 	printf("\n");
-
-	proofs::program_init();
-
+	
 	for (int c = 0; c < sizeof(cases) / sizeof(cases[0]); c++)
 	{
 		int maxComparisons = 0,
 			minComparisons = 1000000,
 			totalComparisons = 0;
 		Clock::time_point caseStartTime = Clock::now();
-		proofs::case_init();
 
 		for (int i = 0; i < RUNS_PER_CASE; i++)
 		{
@@ -101,11 +98,6 @@ int main(int argc, const char ** argv)
 			maxComparisons, 
 			totalComparisons / (double)RUNS_PER_CASE, 
 			std::chrono::duration_cast<millis>(Clock::now() - caseStartTime).count());
-		long long totalRequests = proofs::getTotalRequests();
-		long long totalHits = proofs::getTotalHits();
-		double avgHits = totalHits / (double)RUNS_PER_CASE;
-		double avgRequests = totalRequests / (double)RUNS_PER_CASE;
-		printf("total hits: %d\ntotal requests: %d\navg hits: %f\navg requests: %f\n", (int)totalHits, (int)totalRequests, avgHits, avgRequests);
 	}
 	printf("\n");
 	
@@ -160,7 +152,6 @@ void init_alg(int n, int k)
 	// Clear best array and bst.
 	std::memset(best, 0, k + 1);
 	bst::init();
-	proofs::init();
 
 	// Fill shuffled array.
 	for (int i = 0; i < n; i++)

@@ -1,7 +1,6 @@
 #ifndef DEFINITIONS_H
 #define DEFINITIONS_H
 
-#define MEMOIZED_TYPE long long
 #define MAX_N 10000
 #define MAX_K 500
 #define RUNS_PER_CASE 1000
@@ -18,11 +17,6 @@ int COMPARE(int arg1, int arg2, ...);
 /* Relational proof functions */
 namespace proofs
 {
-	void case_init();
-	long long getTotalRequests();
-	long long getTotalHits();
-	void program_init();
-	void init();
 	bool greater(int expectedGreaterIndex, int expectedLesserIndex);
 	bool lesser(int expectedLesserIndex, int expectedGreaterIndex);
 }
