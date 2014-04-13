@@ -62,9 +62,7 @@ int main(int argc, const char ** argv)
 	for (int i = 0; i < 55; i++)
 		printf("-");
 	printf("\n");
-
-	memo_clear();
-
+	
 	for (int c = 0; c < sizeof(cases) / sizeof(cases[0]); c++)
 	{
 		int maxComparisons = 0,
@@ -75,7 +73,6 @@ int main(int argc, const char ** argv)
 		for (int i = 0; i < RUNS_PER_CASE; i++)
 		{
 			doalg(cases[c].n, cases[c].k);
-			memo_increment();
 
 			int result = COMPARE(-1, cases[c].k, best);
 

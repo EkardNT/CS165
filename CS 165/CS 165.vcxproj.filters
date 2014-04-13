@@ -21,10 +21,10 @@
     <ClCompile Include="compare.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="memoization.cpp">
+    <ClCompile Include="bst.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="bst.cpp">
+    <ClCompile Include="proofs.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>

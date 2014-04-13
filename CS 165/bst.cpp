@@ -61,10 +61,9 @@ namespace bst
 		if (bst::size == k)
 		{
 			// We want only the greatest elements in the
-			// bst, so if the least element currently in
-			// the tree is greater than the new element,
-			// reject the new element.
-			if (greater_than(bst::least->element, element))
+			// bst, so if the new element is less than
+			// the least element, reject it.
+			if (proofs::lesser(element, bst::least->element))
 				return;
 			newNode = delete_least();
 			newNode->element = element;
@@ -103,7 +102,7 @@ namespace bst
 		while (current != nullptr)
 		{
 			parent = current;
-			leftChild = greater_than(current->element, element);
+			leftChild = proofs::greater(current->element, element);
 			current = leftChild ? current->left : current->right;
 		}
 	}
