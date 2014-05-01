@@ -13,22 +13,42 @@ using Project2::BigNum;
 
 int main()
 {
-	std::cout << "Enter a base-10 number to test for primality, or type 'exit' to stop." << std::endl;
-	std::string input;
-	std::getline(std::cin, input);
-	while (input != "exit")
+	do
 	{
-		if (input.size() <= 0)
-			std::cout << "Bad input, no characters found." << std::endl;
-		else if (!ContainsOnlyDigits(input))
-			std::cout << "Bad input, non-digit character found." << std::endl;
-		else
-		{
-			BigNum num(Base10ToBase2(input));
-			std::cout << "num.ToString() == " << num.ToString() << std::endl;
-		}		
+		std::string input;
+		std::cout << "Enter a base-10 number to test for primality, or type 'exit' to stop." << std::endl;
 		std::getline(std::cin, input);
-	}
+
+		if (input == "exit")
+			return EXIT_SUCCESS;
+
+		if (input.size() <= 0)
+		{
+			std::cout << "Bad input, no characters found." << std::endl << std::endl;
+			continue;
+		}
+		else if (!ContainsOnlyDigits(input))
+		{
+			std::cout << "Bad input, non-digit character found." << std::endl << std::endl;
+			continue;
+		}
+		BigNum num = BigNum(Base10ToBase2(input));
+		std::cout << "num.ToString() == " << num.ToString() << std::endl;
+		std::cout << "num.Length() == " << num.Length() << std::endl;
+
+		BigNum _123(Base10ToBase2("18446744082299486211")); // [1][2][3]	
+		BigNum _321(Base10ToBase2("55340232229718589441")); // [3][2][1]
+		BigNum _999(Base10ToBase2("166020696702040670217")); // [9][9][9]
+		BigNum _111(Base10ToBase2("18446744078004518913")); // [1][1][1]
+		BigNum _M(Base10ToBase2("4294967295")); // [2^32-1]
+		BigNum _1(Base10ToBase2("1")); // [1]
+
+		BigNum 
+			a = _M,
+			b = _1;
+
+		std::cout << a.ToString() << " + " << b.ToString() << " == " << BigNum::Add(a, b).ToString() << std::endl;
+	} while (true);
 }
 
 bool ContainsOnlyDigits(const std::string & input)
