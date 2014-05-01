@@ -1,13 +1,15 @@
-
+#include "BigNum.h"
 #include <iostream>
 #include <stack>
 #include <vector>
 #include <sstream>
 #include <cstdint>
 
-
+bool ContainsOnlyDigits(const std::string & input);
 std::string Base10ToBase2(std::string b10);
 void Base10DivideBy2(const std::string & dividend, std::string & quotient, std::uint8_t & remainder);
+
+using Project2::BigNum;
 
 int main()
 {
@@ -16,13 +18,25 @@ int main()
 	std::getline(std::cin, input);
 	while (input != "exit")
 	{
-		std::string quotient;
-		std::uint8_t remainder;
-		Base10DivideBy2(input, quotient, remainder);
-		std::cout << "Quotient: " << quotient << std::endl << "Remainder: " << (char)(remainder + '0') << std::endl;
-		std::cout << input << " in base 2 is " << Base10ToBase2(input) << std::endl;
+		if (input.size() <= 0)
+			std::cout << "Bad input, no characters found." << std::endl;
+		else if (!ContainsOnlyDigits(input))
+			std::cout << "Bad input, non-digit character found." << std::endl;
+		else
+		{
+			BigNum num(Base10ToBase2(input));
+			std::cout << "num.ToString() == " << num.ToString() << std::endl;
+		}		
 		std::getline(std::cin, input);
 	}
+}
+
+bool ContainsOnlyDigits(const std::string & input)
+{
+	for (auto iter = input.cbegin(); iter != input.cend(); iter++)
+		if (*iter < '0' || *iter > '9')
+			return false;
+	return true;
 }
 
 // Holds the results of i / 2, i in [0, 19].
