@@ -109,6 +109,16 @@ bool BigNumber::IsEven() const
 	return digits.getElement(0) % 2 == 0;
 }
 
+BigNumber::Sign BigNumber::GetSign() const
+{
+	return sign;
+}
+
+const Digits<std::uint32_t> const & const BigNumber::GetDigits() const
+{
+	return digits;
+}
+
 void BigNumber::Randomize(std::default_random_engine & e)
 {
 	if (digits.getLength() == 0)
@@ -156,46 +166,68 @@ BigNumber BigNumber::GreatestCommonDenominator(const BigNumber & a, const BigNum
 	return 0;
 }
 
-BigNumber::Comparison Compare(const BigNumber & a, const BigNumber & b)
+BigNumber::Comparison CompareUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_t> & b)
 {
-	// TODO
+	if (a.getLength() > b.getLength())
+		return BigNumber::Comparison::Greater;
+	if (a.getLength() < b.getLength())
+		return BigNumber::Comparison::Lesser;
+	for (int i = a.getLength() - 1; i >= 0; i--)
+	{
+		std::uint32_t 
+			aElem = a.getElement(i),
+			bElem = b.getElement(i);
+		if (aElem > bElem)
+			return BigNumber::Comparison::Greater;
+		if (aElem < bElem)
+			return BigNumber::Comparison::Lesser;
+	}
 	return BigNumber::Comparison::Equal;
+}
+
+BigNumber::Comparison BigNumber::Compare(const BigNumber & a, const BigNumber & b)
+{
+	if (a.IsZero() && b.IsZero())
+		return Comparison::Equal;
+	if (a.GetSign() == Sign::Negative
+		&& b.GetSign() == Sign::Positive)
+		return Comparison::Lesser;
+	if (a.GetSign() == Sign::Positive
+		&& b.GetSign() == Sign::Negative)
+		return Comparison::Greater;
+	if (a.GetSign() == Sign::Positive)
+		return CompareUnsigned(a.GetDigits(), b.GetDigits());
+	return CompareUnsigned(b.GetDigits(), a.GetDigits());
 }
 
 bool BigNumber::operator==(const BigNumber & other) const
 {
-	// TODO
-	return false;
+	return Compare(*this, other) == Comparison::Equal;
 }
 
 bool BigNumber::operator!=(const BigNumber & other) const
 {
-	// TODO
-	return false;
+	return Compare(*this, other) != Comparison::Equal;
 }
 
 bool BigNumber::operator<(const BigNumber & other) const
 {
-	// TODO
-	return false;
+	return Compare(*this, other) == Comparison::Lesser;
 }
 
 bool BigNumber::operator<=(const BigNumber & other) const
 {
-	// TODO
-	return false;
+	return Compare(*this, other) != Comparison::Greater;
 }
 
 bool BigNumber::operator>(const BigNumber & other) const
 {
-	// TODO
-	return false;
+	return Compare(*this, other) == Comparison::Greater;
 }
 
 bool BigNumber::operator>=(const BigNumber & other) const
 {
-	// TODO
-	return false;
+	return Compare(*this, other) != Comparison::Lesser;
 }
 
 BigNumber BigNumber::operator+(const BigNumber & other) const

@@ -31,6 +31,8 @@ public:
 	// Accessors
 	bool IsZero() const;
 	bool IsEven() const;
+	Sign GetSign() const;
+	const Digits<std::uint32_t> const & const GetDigits() const;
 	
 	// Mutates the current value into a random value in
 	// the range [0, value - 1]. Throws if current value

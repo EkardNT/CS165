@@ -35,7 +35,10 @@ int main()
 	std::cout << randomizer << " randomized to ";
 	randomizer.Randomize(e);
 	std::cout << randomizer << std::endl;
-
+	std::cout << "Expected a > b, is it: " << (a > b ? "true" : "false") << std::endl;
+	std::cout << "Expected b < a, is it: " << (b < a ? "true" : "false") << std::endl;
+	std::cout << "Expected a == a, is it: " << (a == a ? "true" : "false") << std::endl;
+	std::cout << "Expected b == b, is it: " << (b == b ? "true" : "false") << std::endl;
 	char wait;
 	std::cin >> wait;
 	return EXIT_SUCCESS;
