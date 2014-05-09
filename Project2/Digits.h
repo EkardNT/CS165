@@ -14,14 +14,17 @@ class Digits
 public:
 	static const std::uint32_t MaxLength = 128;
 
-	Digits() : length(0) {}
+	Digits() : length(0) 
+	{
+		std::memset(digits._Elems, 0, MaxLength);
+	}
 	Digits(const Digits & copy) : length(copy.length)
 	{
+		std::memset(digits._Elems, 0, MaxLength);
 		std::copy(copy.digits.cbegin(), copy.digits.cend(), digits.begin());
 	}
 
-protected:
-	std::uint8_t getLength() const
+	std::uint32_t getLength() const
 	{
 		return length;
 	}
@@ -34,9 +37,10 @@ protected:
 		if (index >= MaxLength)
 			throw "Digits::setElement() - 'index' too large.";
 		if (index >= length)
-			for (std::uint32_t i = length; i < index; i++)
-				digits[i] = 0;
-		digits[index] = 0;
+		{
+			length = index + 1;
+		}
+		digits[index] = element;
 	}
 	bool operator==(const Digits & other) const
 	{

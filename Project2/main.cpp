@@ -15,7 +15,18 @@ bool IsPrime(const BigNumber & value);
 
 int main()
 {
-	srand(time(nullptr));
+	BigNumber a(10);
+	std::cout << "BigNumber a(10): " << a << std::endl;
+	BigNumber b(-10);
+	std::cout << "BigNumber b(-10): " << b << std::endl;
+	BigNumber c("4294967298");
+	std::cout << "BigNumber c(\"some string\"): " << c << std::endl;
+	BigNumber d(b);
+	std::cout << "BigNumber d(b): " << d << std::endl;
+
+	char wait;
+	std::cin >> wait;
+	return EXIT_SUCCESS;
 
 	while (true)
 	{
