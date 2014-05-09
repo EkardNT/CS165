@@ -131,16 +131,189 @@ void BigNumber::Randomize(std::default_random_engine & e)
 	digits.setElement(digits.getLength() - 1, d(e) % digits.getElement(digits.getLength() - 1));
 }
 
-BigNumber BigNumber::Add(const BigNumber & a, const BigNumber & b)
+BigNumber::Comparison CompareUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_t> & b)
 {
-	// TODO
-	return 0;
+	if (a.getLength() > b.getLength())
+		return BigNumber::Comparison::Greater;
+	if (a.getLength() < b.getLength())
+		return BigNumber::Comparison::Lesser;
+	for (int i = a.getLength() - 1; i >= 0; i--)
+	{
+		std::uint32_t
+			aElem = a.getElement(i),
+			bElem = b.getElement(i);
+		if (aElem > bElem)
+			return BigNumber::Comparison::Greater;
+		if (aElem < bElem)
+			return BigNumber::Comparison::Lesser;
+	}
+	return BigNumber::Comparison::Equal;
+}
+
+BigNumber::Comparison BigNumber::Compare(const BigNumber & a, const BigNumber & b)
+{
+	if (a.IsZero() && b.IsZero())
+		return Comparison::Equal;
+	if (a.GetSign() == Sign::Negative
+		&& b.GetSign() == Sign::Positive)
+		return Comparison::Lesser;
+	if (a.GetSign() == Sign::Positive
+		&& b.GetSign() == Sign::Negative)
+		return Comparison::Greater;
+	if (a.GetSign() == Sign::Positive)
+		return CompareUnsigned(a.GetDigits(), b.GetDigits());
+	return CompareUnsigned(b.GetDigits(), a.GetDigits());
+}
+
+// a - b, where a must be >= b.
+void SubtractUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_t> & b, Digits<std::uint32_t> & difference)
+{
+	auto comparison = CompareUnsigned(a, b);
+
+	if (comparison == BigNumber::Comparison::Equal)
+	{
+		difference = BigNumber(0).GetDigits();
+		return;
+	}
+	if (comparison == BigNumber::Comparison::Lesser)
+	{
+		throw "global::SubtractUnsigned() - a was less than b.";
+	}
+
+	if (b.isZero())
+	{
+		difference = a;
+		return;
+	}
+
+	// Most of the subtraction code slightly modified from 
+	// https://mattmccutchen.net/bigint/, which is in the public domain.
+	bool borrowIn, borrowOut;
+	std::uint32_t temp;
+	std::uint32_t i;
+	for (i = 0, borrowIn = false; i < b.getLength(); i++) {
+		temp = a.getElement(i) - b.getElement(i);
+		borrowOut = (temp > a.getElement(i));
+		if (borrowIn) {
+			borrowOut |= (temp == 0);
+			temp--;
+		}
+		difference.setElement(i, temp);
+		borrowIn = borrowOut;
+	}
+	for (; i < a.getLength() && borrowIn; i++) {
+		borrowIn = (a.getElement(i) == 0);
+		difference.setElement(i, a.getElement(i) - 1);
+	}
+	if (borrowIn)
+		throw "global::SubtractUnsigned - negative result in unsigned calculation.";
+	else
+		// Copy over the rest of the blocks
+		for (; i < a.getLength(); i++)
+			difference.setElement(i, a.getElement(i));
+	difference.reduceLength();
+}
+
+// a + b
+void AddUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_t> & b, Digits<std::uint32_t> & sum)
+{
+	// 0 + b == b
+	if (a.isZero())
+		sum = b;
+	// a + 0 == a
+	else if (b.isZero())
+		sum = a;
+	else
+	{
+		std::uint32_t carry = 0;
+		const Digits<std::uint32_t> & longer = (a.getLength() >= b.getLength() ? a : b);
+		const Digits<std::uint32_t> & shorter = (a.getLength() >= b.getLength() ? b : a);
+		for (std::uint32_t i = 0; i < shorter.getLength(); i++)
+		{
+			std::uint64_t iSum = (std::uint64_t)longer.getElement(i) + (std::uint64_t)shorter.getElement(i) + carry;
+			sum.setElement(i, (std::uint32_t)iSum);
+			carry = (std::uint32_t)(iSum >> 32);
+		}
+			sum.setElement(shorter.getLength(), carry + longer.getElement(shorter.getLength()));
+			for (std::uint32_t i = shorter.getLength() + 1; i < longer.getLength(); i++)
+				sum.setElement(i, longer.getElement(i));
+	}
 }
 
 BigNumber BigNumber::Subtract(const BigNumber & a, const BigNumber & b)
 {
-	// TODO
-	return 0;
+	// 0 - b == -b
+	if (a.IsZero())
+		return Negate(b);
+	// a - 0 == a
+	if (b.IsZero())
+		return a;
+	if (a.sign != b.sign)
+	{
+		BigNumber diff(0);
+		diff.sign = a.sign;
+		AddUnsigned(a.digits, b.digits, diff.digits);
+		return diff;
+	}
+	switch (CompareUnsigned(a.digits, b.digits))
+	{
+	case Comparison::Equal:
+		return BigNumber(0);
+	case Comparison::Lesser:
+	{
+		BigNumber diff(0);
+		diff.sign = b.sign == Sign::Positive ? Sign::Negative : Sign::Positive;
+		SubtractUnsigned(b.digits, a.digits, diff.digits);
+		return diff;
+	}
+	case Comparison::Greater:
+	{
+		BigNumber diff(0);
+		diff.sign = a.sign;
+		SubtractUnsigned(a.digits, b.digits, diff.digits);
+		return diff;
+	}
+	}
+}
+
+BigNumber BigNumber::Add(const BigNumber & a, const BigNumber & b)
+{
+	// Shortcut if we are adding 0 to a number.
+	if (a.IsZero())
+		return b;
+	if (b.IsZero())
+		return a;
+	// When adding two numbers, if the signs are the same
+	// then the result will have the same sign and the
+	// magnitude will be the two unsigned magnitudes
+	// added together.
+	if (a.sign == b.sign)
+	{
+		BigNumber sum(0);
+		sum.sign = a.sign;
+		AddUnsigned(a.digits, b.digits, sum.digits);
+		return sum;
+	}
+	switch (CompareUnsigned(a.digits, b.digits))
+	{
+	case Comparison::Equal:
+		// x + (-x) == 0
+		return BigNumber(0);
+	case Comparison::Lesser:
+	{
+		BigNumber sum(0);
+		sum.sign = b.sign;
+		SubtractUnsigned(b.digits, a.digits, sum.digits);
+		return sum;
+	}
+	case Comparison::Greater:
+	{
+		BigNumber sum(0);
+		sum.sign = a.sign;
+		SubtractUnsigned(a.digits, b.digits, sum.digits);
+		return sum;
+	}
+	}
 }
 
 BigNumber BigNumber::Multiply(const BigNumber & a, const BigNumber & b)
@@ -167,40 +340,6 @@ BigNumber BigNumber::GreatestCommonDenominator(const BigNumber & a, const BigNum
 {
 	// TODO
 	return 0;
-}
-
-BigNumber::Comparison CompareUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_t> & b)
-{
-	if (a.getLength() > b.getLength())
-		return BigNumber::Comparison::Greater;
-	if (a.getLength() < b.getLength())
-		return BigNumber::Comparison::Lesser;
-	for (int i = a.getLength() - 1; i >= 0; i--)
-	{
-		std::uint32_t 
-			aElem = a.getElement(i),
-			bElem = b.getElement(i);
-		if (aElem > bElem)
-			return BigNumber::Comparison::Greater;
-		if (aElem < bElem)
-			return BigNumber::Comparison::Lesser;
-	}
-	return BigNumber::Comparison::Equal;
-}
-
-BigNumber::Comparison BigNumber::Compare(const BigNumber & a, const BigNumber & b)
-{
-	if (a.IsZero() && b.IsZero())
-		return Comparison::Equal;
-	if (a.GetSign() == Sign::Negative
-		&& b.GetSign() == Sign::Positive)
-		return Comparison::Lesser;
-	if (a.GetSign() == Sign::Positive
-		&& b.GetSign() == Sign::Negative)
-		return Comparison::Greater;
-	if (a.GetSign() == Sign::Positive)
-		return CompareUnsigned(a.GetDigits(), b.GetDigits());
-	return CompareUnsigned(b.GetDigits(), a.GetDigits());
 }
 
 bool BigNumber::operator==(const BigNumber & other) const

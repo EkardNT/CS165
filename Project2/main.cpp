@@ -39,6 +39,11 @@ int main()
 	std::cout << "Expected b < a, is it: " << (b < a ? "true" : "false") << std::endl;
 	std::cout << "Expected a == a, is it: " << (a == a ? "true" : "false") << std::endl;
 	std::cout << "Expected b == b, is it: " << (b == b ? "true" : "false") << std::endl;
+
+	std::cout << "10 + 20 == " << (BigNumber(10) + BigNumber(20)) << std::endl;
+	std::cout << "-10 + 20 == " << (BigNumber(-10) + BigNumber(20)) << std::endl;
+	std::cout << "10 - 20 == " << (BigNumber(10) - BigNumber(20)) << std::endl;
+
 	char wait;
 	std::cin >> wait;
 	return EXIT_SUCCESS;

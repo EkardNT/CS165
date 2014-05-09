@@ -24,6 +24,11 @@ public:
 		std::copy(copy.digits.cbegin(), copy.digits.cend(), digits.begin());
 	}
 
+	bool isZero() const
+	{
+		return length == 1 && digits[0] == 0;
+	}
+
 	std::uint32_t getLength() const
 	{
 		return length;
@@ -36,11 +41,24 @@ public:
 	{
 		if (index >= MaxLength)
 			throw "Digits::setElement() - 'index' too large.";
-		if (index >= length)
+		if (index >= length && (index == 0 || element != 0))
 		{
 			length = index + 1;
 		}
 		digits[index] = element;
+	}
+	void reduceLength()
+	{
+		for (int i = MaxLength - 1; i >= 0; i--)
+		{
+			if (digits[i] != 0)
+			{
+				length = i + 1;
+				return;
+			}
+		}
+		if (length == 0)
+			length = 1;
 	}
 	bool operator==(const Digits & other) const
 	{
