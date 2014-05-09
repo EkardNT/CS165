@@ -43,6 +43,9 @@ int main()
 	std::cout << "10 + 20 == " << (BigNumber(10) + BigNumber(20)) << std::endl;
 	std::cout << "-10 + 20 == " << (BigNumber(-10) + BigNumber(20)) << std::endl;
 	std::cout << "10 - 20 == " << (BigNumber(10) - BigNumber(20)) << std::endl;
+	std::cout << "-10 - 20 == " << (BigNumber(-10) - BigNumber(20)) << std::endl;
+	std::cout << "-10 + -20 == " << (BigNumber(-10) + BigNumber(-20)) << std::endl;
+	std::cout << "-10 - -20 == " << (BigNumber(-10) - BigNumber(-20)) << std::endl;
 
 	char wait;
 	std::cin >> wait;

@@ -16,11 +16,13 @@ public:
 
 	Digits() : length(0) 
 	{
-		std::memset(digits._Elems, 0, MaxLength);
+		for (int i = 0; i < MaxLength; i++)
+			digits[i] = 0;
 	}
 	Digits(const Digits & copy) : length(copy.length)
 	{
-		std::memset(digits._Elems, 0, MaxLength);
+		for (int i = 0; i < MaxLength; i++)
+			digits[i] = 0;
 		std::copy(copy.digits.cbegin(), copy.digits.cend(), digits.begin());
 	}
 
