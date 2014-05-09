@@ -1,4 +1,5 @@
-#include "BigIntegerLibrary.hh"
+#include "BigInteger.h"
+#include "Utils.h"
 #include <iostream>
 #include <stack>
 #include <vector>
@@ -7,7 +8,7 @@
 #include <ctime>
 #include <random>
 
-const int NumRounds = 200;
+const int NumRounds = 20;
 
 bool TryProcessInput(const std::string & input, std::string & output);
 bool IsPrime(const BigInteger & value);
@@ -59,6 +60,7 @@ bool TryProcessInput(const std::string & input, std::string & output)
 	return output.size() > 0;
 }
 
+// Uses algorithm provided by course website.
 BigInteger Jacobi(const BigInteger & x, const BigInteger & y)
 {
 	if (x == 1)
@@ -68,6 +70,7 @@ BigInteger Jacobi(const BigInteger & x, const BigInteger & y)
 	return Jacobi(y % x, x) * ((((x - 1) * (y - 1) / 4) % 2 == 0) ? 1 : -1);
 }
 
+// Uses algorithm provided by course website.
 BigInteger UglyTerm(const BigInteger & b, const BigInteger & n)
 {
 	BigInteger
@@ -84,6 +87,17 @@ BigInteger UglyTerm(const BigInteger & b, const BigInteger & n)
 	return a;
 }
 
+// Uses Euclidean algorithm from http://en.wikipedia.org/wiki/Greatest_common_divisor#Using_Euclid.27s_algorithm
+BigInteger GreatestCommonDenominator(BigInteger a, BigInteger b)
+{
+	if (a.isZero())
+		return b;
+	if (b.isZero())
+		return a;
+	return GreatestCommonDenominator(b, a % b);
+}
+
+// Uses algorithm provided by course website.
 bool IsPrime(const BigInteger & n)
 {
 	static std::default_random_engine e;
@@ -94,7 +108,7 @@ bool IsPrime(const BigInteger & n)
 		auto b = n - 2;
 		b.randomize(e);
 		b++;
-		if (gcd(b.getMagnitude(), n.getMagnitude()) == 1 && (Jacobi(b, n) - UglyTerm(b, n)) % n == 0)
+		if (GreatestCommonDenominator(b.getMagnitude(), n.getMagnitude()) == 1 && (Jacobi(b, n) - UglyTerm(b, n)) % n == 0)
 			continue;
 		else
 			return false;

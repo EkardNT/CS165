@@ -1,4 +1,10 @@
-#include "BigUnsignedInABase.hh"
+#include "BigUnsignedInABase.h"
+
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
 
 BigUnsignedInABase::BigUnsignedInABase(const Digit *d, Index l, Base base)
 	: NumberlikeArray<Digit>(d, l), base(base) {

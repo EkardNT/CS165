@@ -1,5 +1,11 @@
-#include "BigIntegerUtils.hh"
-#include "BigUnsignedInABase.hh"
+#include "Utils.h"
+#include "BigUnsignedInABase.h"
+
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
 
 std::string bigUnsignedToString(const BigUnsigned &x) {
 	return std::string(BigUnsignedInABase(x, 10));

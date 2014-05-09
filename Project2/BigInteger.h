@@ -1,7 +1,13 @@
 #ifndef BIGINTEGER_H
 #define BIGINTEGER_H
 
-#include "BigUnsigned.hh"
+/* 
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/ 
+*/
+
+#include "BigUnsigned.h"
 #include <random>
 
 /* A BigInteger object represents a signed integer of size limited only by

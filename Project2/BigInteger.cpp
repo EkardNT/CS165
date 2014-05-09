@@ -1,4 +1,10 @@
-#include "BigInteger.hh"
+#include "BigInteger.h"
+
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
 
 void BigInteger::randomize(std::default_random_engine e)
 {

@@ -1,7 +1,13 @@
 #ifndef BIGUNSIGNED_H
 #define BIGUNSIGNED_H
 
-#include "NumberlikeArray.hh"
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
+
+#include "NumberlikeArray.h"
 
 /* A BigUnsigned object represents a nonnegative integer of size limited only by
  * available memory.  BigUnsigneds support most mathematical operators and can

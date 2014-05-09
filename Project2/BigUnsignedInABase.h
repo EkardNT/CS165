@@ -1,8 +1,14 @@
 #ifndef BIGUNSIGNEDINABASE_H
 #define BIGUNSIGNEDINABASE_H
 
-#include "NumberlikeArray.hh"
-#include "BigUnsigned.hh"
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
+
+#include "NumberlikeArray.h"
+#include "BigUnsigned.h"
 #include <string>
 
 /*

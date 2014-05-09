@@ -1,6 +1,12 @@
 #ifndef NUMBERLIKEARRAY_H
 #define NUMBERLIKEARRAY_H
 
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
+
 // Make sure we have NULL.
 #ifndef NULL
 #define NULL 0

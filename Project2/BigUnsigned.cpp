@@ -1,9 +1,10 @@
-#include "BigUnsigned.hh"
+#include "BigUnsigned.h"
 
-// Memory management definitions have moved to the bottom of NumberlikeArray.hh.
-
-// The templates used by these constructors and converters are at the bottom of
-// BigUnsigned.hh.
+/*
+Code modified from the Matt McCutchen's BigInt library,
+which is in the public domain.
+See: https://mattmccutchen.net/bigint/
+*/
 
 BigUnsigned::BigUnsigned(unsigned long  x) { initFromPrimitive      (x); }
 BigUnsigned::BigUnsigned(unsigned int   x) { initFromPrimitive      (x); }

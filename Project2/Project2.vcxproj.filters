@@ -18,42 +18,33 @@
     <ClCompile Include="main.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BigInteger.cc">
+    <ClCompile Include="BigInteger.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BigIntegerAlgorithms.cc">
+    <ClCompile Include="BigUnsigned.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BigIntegerUtils.cc">
+    <ClCompile Include="BigUnsignedInABase.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="BigUnsigned.cc">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="BigUnsignedInABase.cc">
+    <ClCompile Include="Utils.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BigInteger.hh">
+    <ClInclude Include="BigInteger.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BigIntegerAlgorithms.hh">
+    <ClInclude Include="BigUnsigned.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BigIntegerLibrary.hh">
+    <ClInclude Include="BigUnsignedInABase.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BigIntegerUtils.hh">
+    <ClInclude Include="NumberlikeArray.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="BigUnsigned.hh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="BigUnsignedInABase.hh">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="NumberlikeArray.hh">
+    <ClInclude Include="Utils.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

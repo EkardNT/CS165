@@ -78,21 +78,18 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="BigInteger.cc" />
-    <ClCompile Include="BigIntegerAlgorithms.cc" />
-    <ClCompile Include="BigIntegerUtils.cc" />
-    <ClCompile Include="BigUnsigned.cc" />
-    <ClCompile Include="BigUnsignedInABase.cc" />
+    <ClCompile Include="BigInteger.cpp" />
+    <ClCompile Include="Utils.cpp" />
+    <ClCompile Include="BigUnsigned.cpp" />
+    <ClCompile Include="BigUnsignedInABase.cpp" />
     <ClCompile Include="main.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="BigInteger.hh" />
-    <ClInclude Include="BigIntegerAlgorithms.hh" />
-    <ClInclude Include="BigIntegerLibrary.hh" />
-    <ClInclude Include="BigIntegerUtils.hh" />
-    <ClInclude Include="BigUnsigned.hh" />
-    <ClInclude Include="BigUnsignedInABase.hh" />
-    <ClInclude Include="NumberlikeArray.hh" />
+    <ClInclude Include="BigInteger.h" />
+    <ClInclude Include="Utils.h" />
+    <ClInclude Include="BigUnsigned.h" />
+    <ClInclude Include="BigUnsignedInABase.h" />
+    <ClInclude Include="NumberlikeArray.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
