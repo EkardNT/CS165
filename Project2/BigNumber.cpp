@@ -208,7 +208,6 @@ void SubtractUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_
 	if (borrowIn)
 		throw "global::SubtractUnsigned - negative result in unsigned calculation.";
 	else
-		// Copy over the rest of the blocks
 		for (; i < a.getLength(); i++)
 			difference.setElement(i, a.getElement(i));
 	difference.reduceLength();
@@ -316,10 +315,89 @@ BigNumber BigNumber::Add(const BigNumber & a, const BigNumber & b)
 	}
 }
 
+void MultiplyUnsigned(const Digits<std::uint32_t> & a, const Digits<std::uint32_t> & b, Digits<std::uint32_t> & product)
+{
+	// a * 0 == 0
+	// 0 * b == 0
+	if (a.isZero() || b.isZero())
+	{
+		product = BigNumber(0).GetDigits();
+		return;
+	}
+	std::uint32_t i, j, k;
+	unsigned int i2;
+	Blk temp;
+	bool carryIn, carryOut;
+	// Set preliminary length and make room
+	len = a.len + b.len;
+	allocate(len);
+	// Zero out this object
+	for (i = 0; i < len; i++)
+		blk[i] = 0;
+	// For each block of the first number...
+	for (i = 0; i < a.len; i++) {
+		// For each 1-bit of that block...
+		for (i2 = 0; i2 < N; i2++) {
+			if ((a.blk[i] & (Blk(1) << i2)) == 0)
+				continue;
+			/*
+			* Add b to this, shifted left i blocks and i2 bits.
+			* j is the index in b, and k = i + j is the index in this.
+			*
+			* `getShiftedBlock', a short inline function defined above,
+			* is now used for the bit handling.  It replaces the more
+			* complex `bHigh' code, in which each run of the loop dealt
+			* immediately with the low bits and saved the high bits to
+			* be picked up next time.  The last run of the loop used to
+			* leave leftover high bits, which were handled separately.
+			* Instead, this loop runs an additional time with j == b.len.
+			* These changes were made on 2005.01.11.
+			*/
+			for (j = 0, k = i, carryIn = false; j <= b.len; j++, k++) {
+				/*
+				* The body of this loop is very similar to the body of the first loop
+				* in `add', except that this loop does a `+=' instead of a `+'.
+				*/
+				temp = blk[k] + getShiftedBlock(b, j, i2);
+				carryOut = (temp < blk[k]);
+				if (carryIn) {
+					temp++;
+					carryOut |= (temp == 0);
+				}
+				blk[k] = temp;
+				carryIn = carryOut;
+			}
+			// No more extra iteration to deal with `bHigh'.
+			// Roll-over a carry as necessary.
+			for (; carryIn; k++) {
+				blk[k]++;
+				carryIn = (blk[k] == 0);
+			}
+		}
+	}
+	// Zap possible leading zero
+	if (blk[len - 1] == 0)
+		len--;
+}
+
 BigNumber BigNumber::Multiply(const BigNumber & a, const BigNumber & b)
 {
-	// TODO
-	return 0;
+	// a * 0 == 0
+	// 0 * b == 0
+	if (a.IsZero() || b.IsZero())
+		return BigNumber(0);
+	// Table of sign results of a * b == c
+	// a	b	c
+	// +	+	+
+	// +	-	-
+	// -	+	-
+	// -	-	+
+	// So if signs same, then result is positive,
+	// else sign negative.
+	BigNumber product(0);
+	product.sign = (a.sign == b.sign) ? Sign::Positive : Sign::Negative;
+	MultiplyUnsigned(a.digits, b.digits, product.digits);
+	return product;
 }
 
 void BigNumber::DivideWithRemainder(const BigNumber & n, const BigNumber & d, BigNumber & q, BigNumber & r)
