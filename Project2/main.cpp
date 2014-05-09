@@ -1,19 +1,22 @@
-#include "BigNum.h"
+#include "BigIntegerLibrary.hh"
 #include <iostream>
 #include <stack>
 #include <vector>
 #include <sstream>
 #include <cstdint>
+#include <ctime>
+#include <random>
 
-bool ContainsOnlyDigits(const std::string & input);
-std::string Base10ToBase2(std::string b10);
-void Base10DivideBy2(const std::string & dividend, std::string & quotient, std::uint8_t & remainder);
+const int NumRounds = 200;
 
-using Project2::BigNum;
+bool TryProcessInput(const std::string & input, std::string & output);
+bool IsPrime(const BigInteger & value);
 
 int main()
 {
-	do
+	srand(time(nullptr));
+
+	while (true)
 	{
 		std::string input;
 		std::cout << "Enter a base-10 number to test for primality, or type 'exit' to stop." << std::endl;
@@ -22,104 +25,79 @@ int main()
 		if (input == "exit")
 			return EXIT_SUCCESS;
 
-		if (input.size() <= 0)
+		std::string output;
+		if (!TryProcessInput(input, output))
 		{
-			std::cout << "Bad input, no characters found." << std::endl << std::endl;
+			std::cout << "Bad input." << std::endl << std::endl;
 			continue;
 		}
-		else if (!ContainsOnlyDigits(input))
+
+		BigInteger num = stringToBigInteger(input);
+		if (IsPrime(num))
+			std::cout << "The number " << num << " is prime." << std::endl << std::endl;
+		else
 		{
-			std::cout << "Bad input, non-digit character found." << std::endl << std::endl;
-			continue;
+			std::cout << "The number " << num << " is not prime, calculating next prime..." << std::endl;
+			do
+			{
+				num++;
+			} while (!IsPrime(num));
+			std::cout << "The next highest prime is " << num << std::endl << std::endl;
 		}
-		BigNum num = BigNum(Base10ToBase2(input));
-		std::cout << "num.ToString() == " << num.ToString() << std::endl;
-		std::cout << "num.Length() == " << num.Length() << std::endl;
-
-		BigNum _123(Base10ToBase2("18446744082299486211")); // [1][2][3]	
-		BigNum _321(Base10ToBase2("55340232229718589441")); // [3][2][1]
-		BigNum _999(Base10ToBase2("166020696702040670217")); // [9][9][9]
-		BigNum _111(Base10ToBase2("18446744078004518913")); // [1][1][1]
-		BigNum _M(Base10ToBase2("4294967295")); // [2^32-1]
-		BigNum _1(Base10ToBase2("1")); // [1]
-
-		BigNum 
-			a = _M,
-			b = _1;
-
-		std::cout << a.ToString() << " + " << b.ToString() << " == " << BigNum::Add(a, b).ToString() << std::endl;
-	} while (true);
+	}
 }
 
-bool ContainsOnlyDigits(const std::string & input)
+bool TryProcessInput(const std::string & input, std::string & output)
 {
+	std::stringstream stream;
 	for (auto iter = input.cbegin(); iter != input.cend(); iter++)
-		if (*iter < '0' || *iter > '9')
+	{
+		if (*iter >= '0' && *iter <= '9')
+			stream << *iter;
+	}
+	output = stream.str();
+	return output.size() > 0;
+}
+
+BigInteger Jacobi(const BigInteger & x, const BigInteger & y)
+{
+	if (x == 1)
+		return 1;
+	if (x.isEven())
+		return Jacobi(x / 2, y) * ((((y * y - 1) / 8) % 2 == 0) ? 1 : -1);
+	return Jacobi(y % x, x) * ((((x - 1) * (y - 1) / 4) % 2 == 0) ? 1 : -1);
+}
+
+BigInteger UglyTerm(const BigInteger & b, const BigInteger & n)
+{
+	BigInteger
+		x = (n - 1) / 2,
+		y = b,
+		a = 1;
+	while (x > 0)
+	{
+		if (x % 2 == 1)
+			a = (a * y) % n;
+		y = (y * y) % n;
+		x /= 2;
+	}
+	return a;
+}
+
+bool IsPrime(const BigInteger & n)
+{
+	static std::default_random_engine e;
+	if (n.isEven() || n < 3)
+		return false;
+	for (int i = 0; i < NumRounds; i++)
+	{
+		auto b = n - 2;
+		b.randomize(e);
+		b++;
+		if (gcd(b.getMagnitude(), n.getMagnitude()) == 1 && (Jacobi(b, n) - UglyTerm(b, n)) % n == 0)
+			continue;
+		else
 			return false;
+	}
 	return true;
 }
-
-// Holds the results of i / 2, i in [0, 19].
-std::uint8_t divTable[] = { '0', '0', '1', '1', '2', '2', '3', '3', '4', '4', '5', '5', '6', '6', '7', '7', '8', '8', '9', '9' };
-// Holds the results of i % 2, i in [0, 19].
-std::uint8_t remTable[] = { 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1, 0, 1 };
-
-void Base10DivideBy2(const std::string & dividend, std::string & quotient, std::uint8_t & remainder)
-{
-	std::vector<std::uint8_t> resultBuilder;
-	bool carry = false;
-	//int tableIndex = 0;
-	int digitValue = 0;
-	for (unsigned int i = 0; i < dividend.size(); i++)
-	{
-		digitValue = dividend[i] - '0';
-		//tableIndex = dividend[i] - '0';
-		if (carry)
-		{
-			//tableIndex += 10;
-			digitValue += 10;
-		}
-		resultBuilder.push_back(digitValue / 2);
-		//resultBuilder.push_back(divTable[tableIndex]);
-		carry = digitValue % 2 == 1;
-		//carry = remTable[tableIndex] == 1;
-	}
-	remainder = (digitValue + (carry ? 10 : 0)) % 2;
-	//remainder = remTable[tableIndex + (carry ? 10 : 0)];
-	std::stringstream stream;
-	for (auto iter = resultBuilder.cbegin(); iter != resultBuilder.cend(); iter++)
-		stream << (char)(*iter + '0');
-	quotient = stream.str();
-}
-
-bool Base10IsZero(const std::string & b10)
-{
-	for (auto iter = b10.cbegin(); iter != b10.cend(); iter++)
-		if (*iter != '0')
-			return false;
-	return true;
-}
-
-std::string Base10ToBase2(std::string b10)
-{
-	std::stack<std::uint8_t> resultBuilder;
-	std::string quotient;
-	std::uint8_t remainder;
-	Base10DivideBy2(b10, quotient, remainder);
-	while (!Base10IsZero(b10))
-	{
-		resultBuilder.push(remainder);
-		b10 = quotient;
-		Base10DivideBy2(b10, quotient, remainder);
-		b10 = quotient;
-	}
-	resultBuilder.push(remainder);
-	std::stringstream stream;
-	while (!resultBuilder.empty())
-	{
-		stream << (char)(resultBuilder.top() + '0');
-		resultBuilder.pop();
-	}
-	return stream.str();
-}
-
