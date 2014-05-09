@@ -156,8 +156,11 @@ void BigNumber::DivideWithRemainder(const BigNumber & n, const BigNumber & d, Bi
 
 BigNumber BigNumber::Negate(const BigNumber & a)
 {
-	// TODO
-	return 0;
+	if (a.IsZero())
+		return BigNumber(0);
+	BigNumber copy(a);
+	copy.sign = copy.sign == Sign::Positive ? Sign::Negative : Sign::Positive;
+	return copy;
 }
 
 BigNumber BigNumber::GreatestCommonDenominator(const BigNumber & a, const BigNumber & b)
@@ -232,58 +235,36 @@ bool BigNumber::operator>=(const BigNumber & other) const
 
 BigNumber BigNumber::operator+(const BigNumber & other) const
 {
-	// TODO
-	return 0;
+	return BigNumber::Add(*this, other);
 }
 
 BigNumber BigNumber::operator-(const BigNumber & other) const
 {
-	// TODO
-	return 0;
+	return BigNumber::Subtract(*this, other);
 }
 
 BigNumber BigNumber::operator*(const BigNumber & other) const
 {
-	// TODO
-	return 0;
+	return BigNumber::Multiply(*this, other);
 }
 
 BigNumber BigNumber::operator/(const BigNumber & other) const
 {
-	// TODO
-	return 0;
+	BigNumber quotient(0), remainder(0);
+	BigNumber::DivideWithRemainder(*this, other, quotient, remainder);
+	return quotient;
 }
 
 BigNumber BigNumber::operator%(const BigNumber & other) const
 {
-	// TODO
-	return 0;
+	BigNumber quotient(0), remainder(0);
+	BigNumber::DivideWithRemainder(*this, other, quotient, remainder);
+	return remainder;
 }
 
 BigNumber BigNumber::operator-() const
 {
-	// TODO
-	return 0;
-}
-
-void BigNumber::operator++()
-{
-	// TODO
-}
-
-void BigNumber::operator++(std::int32_t amount)
-{
-	// TODO
-}
-
-void BigNumber::operator--()
-{
-	// TODO
-}
-
-void BigNumber::operator--(std::int32_t amount)
-{
-	// TODO
+	return BigNumber::Negate(*this);
 }
 
 std::ostream & operator<<(std::ostream & os, const BigNumber & value)

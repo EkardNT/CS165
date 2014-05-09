@@ -67,7 +67,7 @@ int main()
 			std::cout << "The number " << num << " is not prime, calculating next prime..." << std::endl;
 			do
 			{
-				num++;
+				num = num + 1;
 			} while (!IsPrime(num));
 			std::cout << "The next highest prime is " << num << std::endl << std::endl;
 		}
@@ -120,7 +120,7 @@ bool IsPrime(const BigNumber & n)
 	{
 		auto b = n - 2;
 		b.Randomize(e);
-		b++;
+		b = b + 1;
 		if (BigNumber::GreatestCommonDenominator(b, n) == 1 && (Jacobi(b, n) - UglyTerm(b, n)) % n == 0)
 			continue;
 		else

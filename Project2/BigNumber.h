@@ -71,10 +71,6 @@ public:
 	BigNumber operator /(const BigNumber & other) const;
 	BigNumber operator %(const BigNumber & other) const;
 	BigNumber operator -() const;
-	void operator ++();
-	void operator ++(std::int32_t amount);
-	void operator --();
-	void operator --(std::int32_t amount);
 	// Conversions
 	friend std::ostream & operator<<(std::ostream & os, const BigNumber & value);
 private:
