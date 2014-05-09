@@ -111,7 +111,14 @@ bool BigNumber::IsEven() const
 
 void BigNumber::Randomize(std::default_random_engine & e)
 {
-	// TODO
+	if (digits.getLength() == 0)
+		throw "BigNumber::Randomize() - invalid digits length.";
+	if (sign == BigNumber::Sign::Negative)
+		throw "BigNumber::Randomize() - cannot call Randomize() on a negative BigNumber.";
+	static std::uniform_int_distribution<std::uint32_t> d;
+	for (std::uint32_t i = 0; i < digits.getLength() - 1; i++)
+		digits.setElement(i, d(e));
+	digits.setElement(digits.getLength() - 1, d(e) % digits.getElement(digits.getLength() - 1));
 }
 
 BigNumber BigNumber::Add(const BigNumber & a, const BigNumber & b)

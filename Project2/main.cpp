@@ -23,6 +23,18 @@ int main()
 	std::cout << "BigNumber c(\"some string\"): " << c << std::endl;
 	BigNumber d(b);
 	std::cout << "BigNumber d(b): " << d << std::endl;
+	BigNumber shouldBeEven("12349234592345612398523149712538");
+	std::cout << shouldBeEven << " should be even, it is: " << (shouldBeEven.IsEven() ? "true" : "false") << std::endl;
+	BigNumber shouldBeOdd("123096578459238452348975624390785");
+	std::cout << shouldBeOdd << " should be odd, is it: " << (shouldBeOdd.IsEven() ? "false" : "true") << std::endl;
+	BigNumber pos0(+0), neg0(-0);
+	std::cout << pos0 << " should be zero, is it: " << (pos0.IsZero() ? "true" : "false") << std::endl;
+	std::cout << neg0 << " should be zero, is it: " << (neg0.IsZero() ? "true" : "false") << std::endl;
+	std::default_random_engine e(std::time(nullptr));
+	BigNumber randomizer("76923752934561239857490786123951239876234");
+	std::cout << randomizer << " randomized to ";
+	randomizer.Randomize(e);
+	std::cout << randomizer << std::endl;
 
 	char wait;
 	std::cin >> wait;
