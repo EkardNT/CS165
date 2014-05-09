@@ -1,4 +1,5 @@
 #include "BigIntegerLibrary.hh"
+#include "BigNumber.h"
 #include <iostream>
 #include <stack>
 #include <vector>
@@ -10,7 +11,7 @@
 const int NumRounds = 200;
 
 bool TryProcessInput(const std::string & input, std::string & output);
-bool IsPrime(const BigInteger & value);
+bool IsPrime(const BigNumber & value);
 
 int main()
 {
@@ -32,7 +33,7 @@ int main()
 			continue;
 		}
 
-		BigInteger num = stringToBigInteger(input);
+		BigNumber num(input);
 		if (IsPrime(num))
 			std::cout << "The number " << num << " is prime." << std::endl << std::endl;
 		else
@@ -59,18 +60,18 @@ bool TryProcessInput(const std::string & input, std::string & output)
 	return output.size() > 0;
 }
 
-BigInteger Jacobi(const BigInteger & x, const BigInteger & y)
+BigNumber Jacobi(const BigNumber & x, const BigNumber & y)
 {
 	if (x == 1)
 		return 1;
-	if (x.isEven())
+	if (x.IsEven())
 		return Jacobi(x / 2, y) * ((((y * y - 1) / 8) % 2 == 0) ? 1 : -1);
 	return Jacobi(y % x, x) * ((((x - 1) * (y - 1) / 4) % 2 == 0) ? 1 : -1);
 }
 
-BigInteger UglyTerm(const BigInteger & b, const BigInteger & n)
+BigNumber UglyTerm(const BigNumber & b, const BigNumber & n)
 {
-	BigInteger
+	BigNumber
 		x = (n - 1) / 2,
 		y = b,
 		a = 1;
@@ -79,22 +80,22 @@ BigInteger UglyTerm(const BigInteger & b, const BigInteger & n)
 		if (x % 2 == 1)
 			a = (a * y) % n;
 		y = (y * y) % n;
-		x /= 2;
+		x = x / 2;
 	}
 	return a;
 }
 
-bool IsPrime(const BigInteger & n)
+bool IsPrime(const BigNumber & n)
 {
 	static std::default_random_engine e;
-	if (n.isEven() || n < 3)
+	if (n.IsEven() || n < 3)
 		return false;
 	for (int i = 0; i < NumRounds; i++)
 	{
 		auto b = n - 2;
-		b.randomize(e);
+		b.Randomize(e);
 		b++;
-		if (gcd(b.getMagnitude(), n.getMagnitude()) == 1 && (Jacobi(b, n) - UglyTerm(b, n)) % n == 0)
+		if (BigNumber::GreatestCommonDenominator(b, n) == 1 && (Jacobi(b, n) - UglyTerm(b, n)) % n == 0)
 			continue;
 		else
 			return false;

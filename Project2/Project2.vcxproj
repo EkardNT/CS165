@@ -81,6 +81,7 @@
     <ClCompile Include="BigInteger.cc" />
     <ClCompile Include="BigIntegerAlgorithms.cc" />
     <ClCompile Include="BigIntegerUtils.cc" />
+    <ClCompile Include="BigNumber.cpp" />
     <ClCompile Include="BigUnsigned.cc" />
     <ClCompile Include="BigUnsignedInABase.cc" />
     <ClCompile Include="main.cpp" />
@@ -90,9 +91,11 @@
     <ClInclude Include="BigIntegerAlgorithms.hh" />
     <ClInclude Include="BigIntegerLibrary.hh" />
     <ClInclude Include="BigIntegerUtils.hh" />
+    <ClInclude Include="BigNumber.h" />
     <ClInclude Include="BigUnsigned.hh" />
     <ClInclude Include="BigUnsignedInABase.hh" />
     <ClInclude Include="NumberlikeArray.hh" />
+    <ClInclude Include="Digits.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

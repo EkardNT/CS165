@@ -33,6 +33,9 @@
     <ClCompile Include="BigUnsignedInABase.cc">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="BigNumber.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="BigInteger.hh">
@@ -54,6 +57,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="NumberlikeArray.hh">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="Digits.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="BigNumber.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
