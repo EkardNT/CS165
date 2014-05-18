@@ -7,8 +7,8 @@
 
 // Attempts to translate command line arguments into the
 // specific compression algorithm to use and the input
-// source to read data from. Returns true if successful,
-// or false if the command line arguments are incorrect.
+// source to read data from. Throws an exception with an
+// error message if unsuccessful.
 void ParseArgs(
 	const char ** args, 
 	int argCount, 
