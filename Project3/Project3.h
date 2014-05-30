@@ -17,20 +17,25 @@ namespace Project3
 	class ICompressionAlg
 	{
 	public:
-		ICompressionAlg(std::shared_ptr<std::ostream> outputStream) : outputStream(outputStream) {}
+		ICompressionAlg(std::shared_ptr<std::ostream> outputStream) : outputStream(outputStream), bitBuilder(0), bitCount(0) {}
 		virtual ~ICompressionAlg() {}
 		virtual void Process(std::uint8_t byte) = 0;
 		virtual void Finish() = 0;
 
 	protected:
-		void Write(std::uint8_t byte)
+		void OutputByte(std::uint8_t byte)
 		{
 			char val = (char)byte;
 			outputStream->write(&val, 1);
 		}
+		void OutputBit(bool bit)
+		{
+
+		}
 
 	private:
 		std::shared_ptr<std::ostream> outputStream;
+		std::uint8_t bitBuilder, bitCount;
 	};
 }
 

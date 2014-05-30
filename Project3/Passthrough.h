@@ -1,3 +1,7 @@
+#pragma once
+#ifndef PASSTHROUGH_H
+#define PASSTHROUGH_H
+
 #include "Project3.h"
 
 namespace Project3
@@ -22,3 +26,5 @@ namespace Project3
 		virtual void Finish();
 	};
 }
+
+#endif

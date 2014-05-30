@@ -1,4 +1,9 @@
+#pragma once
+#ifndef HUFFMAN_H
+#define HUFFMAN_H
+
 #include "Project3.h"
+#include <array>
 
 namespace Project3
 {
@@ -10,6 +15,11 @@ namespace Project3
 
 		virtual void Process(std::uint8_t byte);
 		virtual void Finish();
+
+	private:
+		// Frequency table for all 256 possible byte values.
+		std::array<std::uint32_t, 256> frequencies;
+		std::vector<std::uint8_t> storedBytes;
 	};
 
 	class HuffmanDecoder : public ICompressionAlg
@@ -22,3 +32,5 @@ namespace Project3
 		virtual void Finish();
 	};
 }
+
+#endif

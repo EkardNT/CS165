@@ -4,6 +4,7 @@
 #include "Passthrough.h"
 #include <memory>
 #include <fstream>
+#include <vector>
 
 // Attempts to translate command line arguments into the
 // specific compression algorithm to use and the input
@@ -34,22 +35,17 @@ int main(int argCount, const char ** args)
 		return EXIT_FAILURE;
 	}
 
-	char readBuffer[FileInputReadBufferSize > ConsoleInputReadBufferSize ? FileInputReadBufferSize : ConsoleInputReadBufferSize];
+	char readBuffer[1024];
+	std::vector<std::uint8_t> bytes;
 
 	// Read data from input stream in chunks of size ReadBufferSize.
 	// We can't get size of input ahead of time because the input stream
 	// might be std::cin, which has no size.
 	while (input->read(readBuffer, 1) && input->good())
 	{
-		try
-		{
-			compressionAlg->Process((std::uint8_t)readBuffer[0]);
-		}
-		catch (std::exception e)
-		{
-			std::cerr << "Exception thrown while processing input: " << e.what();
-			return EXIT_FAILURE;
-		}
+		int amountRead = input->gcount();
+		for (int i = 0; i < amountRead; i++)
+			bytes.push_back(readBuffer[i]);
 	}
 	
 	// Finish the encoding or decoding.
@@ -60,7 +56,7 @@ int main(int argCount, const char ** args)
 	}
 	catch (std::exception e)
 	{
-		std::cerr << "Exception thrown when compression algorithm finishing: " << e.what();
+		std::cerr << "Exception thrown while compression algorithm finishing: " << e.what();
 		return EXIT_FAILURE;
 	}
 }
