@@ -1,3 +1,7 @@
+#pragma once
+#ifndef LEMPELZIV_H
+#define LEMPELZIV_H
+
 #include "Project3.h"
 
 namespace Project3
@@ -26,3 +30,5 @@ namespace Project3
 		std::int32_t windowSize;
 	};
 }
+
+#endif
