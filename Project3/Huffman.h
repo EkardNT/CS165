@@ -5,20 +5,18 @@ namespace Project3
 	class HuffmanEncoder : public ICompressionAlg
 	{
 	public:
-		HuffmanEncoder(std::shared_ptr<std::ostream> outputStream);
+		HuffmanEncoder();
 		virtual ~HuffmanEncoder();
 
-		virtual void Process(std::uint8_t byte);
-		virtual void Finish();
+		virtual void Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData);
 	};
 
 	class HuffmanDecoder : public ICompressionAlg
 	{
 	public:
-		HuffmanDecoder(std::shared_ptr<std::ostream> outputStream);
+		HuffmanDecoder();
 		virtual ~HuffmanDecoder();
 
-		virtual void Process(std::uint8_t byte);
-		virtual void Finish();
+		virtual void Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData);
 	};
 }

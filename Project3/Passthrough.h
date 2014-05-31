@@ -5,20 +5,18 @@ namespace Project3
 	class PassthroughEncoder : public ICompressionAlg
 	{
 	public:
-		PassthroughEncoder(std::shared_ptr<std::ostream> outputStream);
+		PassthroughEncoder();
 		virtual ~PassthroughEncoder();
 
-		virtual void Process(std::uint8_t byte);
-		virtual void Finish();
+		virtual void Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData);
 	};
 
 	class PassthroughDecoder : public ICompressionAlg
 	{
 	public:
-		PassthroughDecoder(std::shared_ptr<std::ostream> outputStream);
+		PassthroughDecoder();
 		virtual ~PassthroughDecoder();
 
-		virtual void Process(std::uint8_t byte);
-		virtual void Finish();
+		virtual void Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData);
 	};
 }

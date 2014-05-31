@@ -11,6 +11,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "PrimalityTest", "PrimalityT
 EndProject
 Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "Project3", "Project3\Project3.vcxproj", "{F1D04C55-E75E-4CFA-8D86-93B3A5BC3331}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Project3Stats", "Project3Stats\Project3Stats.csproj", "{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -61,6 +63,16 @@ Global
 		{F1D04C55-E75E-4CFA-8D86-93B3A5BC3331}.Release|Mixed Platforms.Build.0 = Release|Win32
 		{F1D04C55-E75E-4CFA-8D86-93B3A5BC3331}.Release|Win32.ActiveCfg = Release|Win32
 		{F1D04C55-E75E-4CFA-8D86-93B3A5BC3331}.Release|Win32.Build.0 = Release|Win32
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Debug|Mixed Platforms.ActiveCfg = Debug|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Debug|Mixed Platforms.Build.0 = Debug|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Debug|Win32.ActiveCfg = Debug|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Release|Any CPU.Build.0 = Release|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Release|Mixed Platforms.ActiveCfg = Release|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Release|Mixed Platforms.Build.0 = Release|Any CPU
+		{ADD02AB6-AC91-4254-8B9B-F17E925E92DB}.Release|Win32.ActiveCfg = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

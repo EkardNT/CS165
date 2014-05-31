@@ -11,12 +11,14 @@
     </ProjectConfiguration>
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="Bits.h" />
     <ClInclude Include="Huffman.h" />
     <ClInclude Include="LempelZiv.h" />
     <ClInclude Include="Passthrough.h" />
     <ClInclude Include="Project3.h" />
   </ItemGroup>
   <ItemGroup>
+    <ClCompile Include="Bits.cpp" />
     <ClCompile Include="Huffman.cpp" />
     <ClCompile Include="LempelZiv.cpp" />
     <ClCompile Include="main.cpp" />

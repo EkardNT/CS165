@@ -3,8 +3,7 @@
 
 namespace Project3
 {
-	PassthroughEncoder::PassthroughEncoder(std::shared_ptr<std::ostream> outputStream)
-		: ICompressionAlg(outputStream)
+	PassthroughEncoder::PassthroughEncoder()
 	{
 
 	}
@@ -14,18 +13,12 @@ namespace Project3
 
 	}
 
-	void PassthroughEncoder::Process(std::uint8_t byte)
-	{
-		Write(byte);
-	}
-
-	void PassthroughEncoder::Finish()
+	void PassthroughEncoder::Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData)
 	{
 
 	}
 
-	PassthroughDecoder::PassthroughDecoder(std::shared_ptr<std::ostream> outputStream)
-		: ICompressionAlg(outputStream)
+	PassthroughDecoder::PassthroughDecoder()
 	{
 
 	}
@@ -35,12 +28,7 @@ namespace Project3
 
 	}
 
-	void PassthroughDecoder::Process(std::uint8_t byte)
-	{
-		Write(byte);
-	}
-
-	void PassthroughDecoder::Finish()
+	void PassthroughDecoder::Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData)
 	{
 
 	}

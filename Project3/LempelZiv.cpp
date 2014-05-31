@@ -3,8 +3,8 @@
 
 namespace Project3
 {
-	LempelZivEncoder::LempelZivEncoder(std::shared_ptr<std::ostream> outputStream, std::int32_t windowSize)
-		: ICompressionAlg(outputStream), windowSize(windowSize)
+	LempelZivEncoder::LempelZivEncoder(std::int32_t windowSize)
+		: windowSize(windowSize)
 	{
 
 	}
@@ -14,18 +14,13 @@ namespace Project3
 
 	}
 
-	void LempelZivEncoder::Process(std::uint8_t byte)
+	void LempelZivEncoder::Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData)
 	{
-		throw std::exception("Not implemented.");
+
 	}
 
-	void LempelZivEncoder::Finish()
-	{
-		throw std::exception("Not implemented.");
-	}
-
-	LempelZivDecoder::LempelZivDecoder(std::shared_ptr<std::ostream> outputStream, std::int32_t windowSize)
-		: ICompressionAlg(outputStream), windowSize(windowSize)
+	LempelZivDecoder::LempelZivDecoder(std::int32_t windowSize)
+		: windowSize(windowSize)
 	{
 
 	}
@@ -35,13 +30,8 @@ namespace Project3
 
 	}
 
-	void LempelZivDecoder::Process(std::uint8_t byte)
+	void LempelZivDecoder::Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData)
 	{
-		throw std::exception("Not implemented.");
-	}
 
-	void LempelZivDecoder::Finish()
-	{
-		throw std::exception("Not implemented.");
 	}
 }

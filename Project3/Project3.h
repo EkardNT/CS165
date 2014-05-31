@@ -5,6 +5,7 @@
 #include <iostream>
 #include <cstdint>
 #include <memory>
+#include <vector>
 
 namespace Project3
 {
@@ -13,24 +14,12 @@ namespace Project3
 	const std::uint8_t LempelZiv2Identifier = 19;
 	const std::uint8_t PassthroughIdentifier = 23;
 
-	// Encodes or decodes input one byte at a time.
 	class ICompressionAlg
 	{
 	public:
-		ICompressionAlg(std::shared_ptr<std::ostream> outputStream) : outputStream(outputStream) {}
+		ICompressionAlg() {}
 		virtual ~ICompressionAlg() {}
-		virtual void Process(std::uint8_t byte) = 0;
-		virtual void Finish() = 0;
-
-	protected:
-		void Write(std::uint8_t byte)
-		{
-			char val = (char)byte;
-			outputStream->write(&val, 1);
-		}
-
-	private:
-		std::shared_ptr<std::ostream> outputStream;
+		virtual void Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData) = 0;
 	};
 }
 
