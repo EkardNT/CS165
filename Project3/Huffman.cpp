@@ -20,7 +20,7 @@ namespace Project3
 	struct Node
 	{
 		Node *left, *right;
-		int value;
+		int value; // Need int for -1 signifier.
 		int frequency;
 
 	};
@@ -71,7 +71,7 @@ namespace Project3
 		if (root->value == -1)
 		{
 			if (code.size() == 64)
-				throw std::exception("Huffman code greater than 64 bits.");
+				throw std::exception();
 			code.push_back(false);
 			ExpandBinaryPaths(root->left, code, bitStrings, bitStringLengths);
 			code.pop_back();
@@ -100,14 +100,31 @@ namespace Project3
 			WriteHuffmanTree(tree->right, writer);
 		}
 		else
-			writer.WriteBits(tree->value, 8);
+		{
+			uint64_t bits = (tree->value << 1) | 1;
+			writer.WriteBits(bits, 9);
+		}
+	}
+
+	// Reverses the order of the least significant 'count' bits in 'bits'.
+	// The remaining most significant bits are set to 0.
+	uint64_t ReverseBitOrder(uint64_t bits, int count)
+	{
+		uint64_t result = 0;
+		for (int i = 0; i < count; i++)
+		{
+			uint64_t bit = 1 & (bits >> i);
+			result |= bit << (count - 1 - i);
+		}
+		return result;
 	}
 
 	void HuffmanEncoder::Execute(ostream & outputStream, shared_ptr<vector<uint8_t>> inputData)
 	{
 		// First pass
 		int frequencies[256];
-		memset(frequencies, 0, 256 * sizeof(int));
+		for (int i = 0; i < 256; i++)
+			frequencies[i] = 0;
 
 		for (int i = 0; i < inputData->size(); i++)
 		{
@@ -116,19 +133,24 @@ namespace Project3
 
 		Node * huffmanTree = BuildHuffmanTree(frequencies);
 
-		std::uint64_t bitStrings[256];
+		uint64_t bitStrings[256];
 		int bitStringLengths[256];
 		ExpandBinaryPaths(huffmanTree, vector<bool>(), bitStrings, bitStringLengths);
 
 		BitWriter writer(outputStream);
 		WriteHuffmanTree(huffmanTree, writer);
 
+		// Write the number of elements as a 32 bit unsigned number.
+		uint64_t size = inputData->size();
+		writer.WriteBits(size, 32);
+
 		for (int i = 0; i < inputData->size(); i++)
 		{
 			uint8_t value = inputData->at(i);
 			uint64_t bitString = bitStrings[value];
 			int bitLength = bitStringLengths[value];
-			writer.WriteBits(bitString, bitLength);
+			uint64_t bitStringReversed = ReverseBitOrder(bitString, bitLength);
+			writer.WriteBits(bitStringReversed, bitLength);
 		}
 
 		writer.Flush();
@@ -144,8 +166,58 @@ namespace Project3
 
 	}
 
+	Node * ReconstructHuffmanTree(BitReader & reader)
+	{
+		Node * node = new Node();
+		// We don't need to know the frequency for decoding.
+		node->frequency = 0;
+
+		uint64_t bits = 0;
+		reader.ReadBits(bits, 1);
+		
+		if (bits == 0)
+		{
+			node->left = ReconstructHuffmanTree(reader);
+			node->right = ReconstructHuffmanTree(reader);
+			node->value = -1;
+		}
+		else
+		{
+			node->left = nullptr;
+			node->right = nullptr;
+			reader.ReadBits(bits, 8);
+			node->value = (int)bits;
+		}
+
+		return node;
+	}
+
+	uint8_t DecodeValueFromTree(Node * root, BitReader & reader)
+	{
+		uint64_t bits = 0;
+		Node * current = root;
+		while (root->value == -1)
+		{
+			reader.ReadBits(bits, 1);
+			root = (bits == 1) ? root->right : root->left;
+		}
+		return (uint8_t)root->value;
+	}
+
 	void HuffmanDecoder::Execute(ostream & outputStream, shared_ptr<vector<uint8_t>> inputData)
 	{
+		BitReader reader(inputData);
+		Node * tree = ReconstructHuffmanTree(reader);
+		
+		// Read the number of encoded elements as a 32 bit number.
+		uint64_t size = 0;
+		reader.ReadBits(size, 32);
 
+		for (int i = 0; i < size; i++)
+		{
+			uint8_t value = DecodeValueFromTree(tree, reader);
+			char writeValue = value;
+			outputStream.write(&writeValue, 1);
+		}
 	}
 }

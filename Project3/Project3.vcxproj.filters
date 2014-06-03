@@ -24,9 +24,6 @@
     <ClInclude Include="LempelZiv.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="Passthrough.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="Bits.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -39,9 +36,6 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="main.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="Passthrough.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="Bits.cpp">

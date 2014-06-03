@@ -1,9 +1,15 @@
 #include "Project3.h"
 #include "Huffman.h"
 #include "LempelZiv.h"
-#include "Passthrough.h"
 #include <memory>
 #include <fstream>
+#include <stdexcept>
+#include <cstring>
+
+#ifdef WIN32
+#include <fcntl.h>
+#include <io.h>
+#endif
 
 // Attempts to translate command line arguments into the
 // specific compression algorithm to use and the input
@@ -18,11 +24,21 @@ void ParseArgs(
 
 int main(int argCount, const char ** args)
 {
-	std::shared_ptr<Project3::ICompressionAlg> compressionAlg = nullptr;
-	std::shared_ptr<std::istream> input = nullptr;
+#ifdef WIN32
+	// Suppress newline translation in Windows.
+	_setmode(_fileno(stdout), _O_BINARY);
+#endif
+
+	std::shared_ptr<Project3::ICompressionAlg> compressionAlg;
+	std::shared_ptr<std::istream> input;
 	try
 	{
 		ParseArgs(args, argCount, compressionAlg, input);
+	}
+	catch (std::logic_error e)
+	{
+		std::cerr << "Logic error parsing arguments: " << e.what();
+		return EXIT_FAILURE;
 	}
 	catch (std::exception e)
 	{
@@ -51,12 +67,22 @@ int main(int argCount, const char ** args)
 		std::cout.flush();
 		return EXIT_SUCCESS;
 	}
+	catch (std::logic_error e)
+	{
+		std::cerr << "Logic exception thrown when compression algorithm finishing: " << e.what();
+		return EXIT_FAILURE;
+	}
 	catch (std::exception e)
 	{
 		std::cerr << "Exception thrown when compression algorithm finishing: " << e.what();
 		return EXIT_FAILURE;
 	}
 }
+
+struct NoopDeleter
+{
+	void operator() (std::istream * unused) {}
+};
 
 void ParseArgs(
 	const char ** args, 
@@ -67,53 +93,47 @@ void ParseArgs(
 	// Blank command line arguments is an error, need to
 	// specify at least the operation.
 	if (argCount < 2)
-		throw std::exception("Must specify operation.");
+		throw std::logic_error("Must specify operation.");
 
 	// If file name not provided, get input from std::cin (note noop deleter).
 	if (argCount < 3)
 	{
-		input = std::shared_ptr<std::istream>(&std::cin, [](std::istream*) -> void {});
+		input = std::shared_ptr<std::istream>(&std::cin, NoopDeleter());
 	}
 	// Otherwise read from file.
 	else
 	{
 		input = std::shared_ptr<std::istream>(new std::ifstream(args[2], std::ios_base::in | std::ios_base::binary));
 		if (!input->good())
-			throw std::exception("Unable to open file.");
+			throw std::logic_error("Unable to open file.");
 	}
 
 	// Now determine the compression action to perform. This
 	// needs to come after resolving the input stream so that
 	// the first byte can be read in the EXPAND case.
-	if (strcmp(args[1],"HUFF") == 0)
+	if (std::strcmp(args[1],"HUFF") == 0)
 	{
 		compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::HuffmanEncoder());
 		char idVal = static_cast<char>(Project3::HuffmanIdentifier);
 		std::cout.write(&idVal, 1);
 	}
-	else if (strcmp(args[1], "LZ1") == 0)
+	else if (std::strcmp(args[1], "LZ1") == 0)
 	{
 		compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::LempelZivEncoder(2048));
 		char idVal = static_cast<char>(Project3::LempelZiv1Identifier);
 		std::cout.write(&idVal, 1);
 	}
-	else if (strcmp(args[1], "LZ2") == 0)
+	else if (std::strcmp(args[1], "LZ2") == 0)
 	{
 		compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::LempelZivEncoder(4096));
 		char idVal = static_cast<char>(Project3::LempelZiv2Identifier);
 		std::cout.write(&idVal, 1);
 	}
-	else if (strcmp(args[1], "PASS") == 0)
-	{
-		compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::PassthroughEncoder());
-		char idVal = static_cast<char>(Project3::PassthroughIdentifier);
-		std::cout.write(&idVal, 1);
-	}
-	else if (strcmp(args[1], "EXPAND") == 0)
+	else if (std::strcmp(args[1], "EXPAND") == 0)
 	{
 		// Read the first byte to determine decode algorithm to use.
-		std::uint8_t encodeIdentifier;
-		*input >> encodeIdentifier;
+		char encodeIdentifier;
+		input->read(&encodeIdentifier, 1);
 		switch (encodeIdentifier)
 		{
 		case Project3::HuffmanIdentifier:
@@ -125,13 +145,10 @@ void ParseArgs(
 		case Project3::LempelZiv2Identifier:
 			compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::LempelZivDecoder(4096));
 			break;
-		case Project3::PassthroughIdentifier:
-			compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::PassthroughDecoder());
-			break;
 		default:
-			throw std::exception("Unknown operation identifier, could not decide what decoder to use.");
+			throw std::logic_error("Unknown operation identifier, could not decide what decoder to use.");
 		}
 	}
 	else
-		throw std::exception("Invalid operation, must be one of HUFF, LZ1, LZ2, PASS, EXPAND.");
+		throw std::logic_error("Invalid operation, must be one of HUFF, LZ1, LZ2, PASS, EXPAND.");
 }

@@ -7,6 +7,10 @@
 #include <memory>
 #include <vector>
 
+#ifdef __unix__
+#define nullptr NULL
+#endif
+
 namespace Project3
 {
 	const std::uint8_t HuffmanIdentifier = 13;

@@ -1,3 +1,7 @@
+#pragma once
+#ifndef HUFFMAN_H
+#define HUFFMAN_H
+
 #include "Project3.h"
 
 namespace Project3
@@ -20,3 +24,5 @@ namespace Project3
 		virtual void Execute(std::ostream & outputStream, std::shared_ptr<std::vector<std::uint8_t>> inputData);
 	};
 }
+
+#endif
