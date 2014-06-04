@@ -74,15 +74,9 @@ namespace Project3
 
 		map<MapElement, MapElement, MapElementComparer> lvMap;
 		MapElement element;
-
-		uint64_t refCount = 0, litCount = 0;
-		int prev = 0;
-
+		
 		for (int lbPosition = 0; lbPosition < inputData->size(); /* noop */)
 		{
-			if (lbPosition / 1000 != prev / 1000)
-				std::cerr << lbPosition << ": " << refCount << ", " << litCount << std::endl;
-			prev = lbPosition;
 
 			int initialLength = std::min((unsigned int)16, inputData->size() - lbPosition);
 
@@ -106,9 +100,7 @@ namespace Project3
 
 						writer.WriteBits(searchLength - 1, 4);
 						writer.WriteBits(offset, offsetBitCount);
-
-						refCount++;
-
+						
 						lbPosition += searchLength;
 						goto EndOfILoop;
 					}
@@ -125,9 +117,7 @@ namespace Project3
 				uint64_t val = element.elements[i];
 				writer.WriteBits(val, 8);
 			}
-
-			litCount++;
-
+			
 			lbPosition += initialLength;
 
 		EndOfILoop:

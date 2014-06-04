@@ -85,9 +85,9 @@ struct NoopDeleter
 };
 
 void ParseArgs(
-	const char ** args, 
-	int argCount, 
-	std::shared_ptr<Project3::ICompressionAlg> & compressionAlg, 
+	const char ** args,
+	int argCount,
+	std::shared_ptr<Project3::ICompressionAlg> & compressionAlg,
 	std::shared_ptr<std::istream> & input)
 {
 	// Blank command line arguments is an error, need to
@@ -111,7 +111,7 @@ void ParseArgs(
 	// Now determine the compression action to perform. This
 	// needs to come after resolving the input stream so that
 	// the first byte can be read in the EXPAND case.
-	if (std::strcmp(args[1],"HUFF") == 0)
+	if (std::strcmp(args[1], "HUFF") == 0)
 	{
 		compressionAlg = std::shared_ptr<Project3::ICompressionAlg>(new Project3::HuffmanEncoder());
 		char idVal = static_cast<char>(Project3::HuffmanIdentifier);
