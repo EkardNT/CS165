@@ -28,7 +28,7 @@ int main(int argCount, const char ** args)
 	// Suppress newline translation in Windows.
 	_setmode(_fileno(stdout), _O_BINARY);
 #endif
-
+	
 	std::shared_ptr<Project3::ICompressionAlg> compressionAlg;
 	std::shared_ptr<std::istream> input;
 	try
@@ -72,11 +72,11 @@ int main(int argCount, const char ** args)
 		std::cerr << "Logic exception thrown when compression algorithm finishing: " << e.what();
 		return EXIT_FAILURE;
 	}
-	catch (std::exception e)
-	{
-		std::cerr << "Exception thrown when compression algorithm finishing: " << e.what();
-		return EXIT_FAILURE;
-	}
+	//catch (std::exception e)
+	//{
+	//	std::cerr << "Exception thrown when compression algorithm finishing: " << e.what();
+	//	return EXIT_FAILURE;
+	//}
 }
 
 struct NoopDeleter
