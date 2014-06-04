@@ -77,8 +77,9 @@ namespace Project3
 		
 		for (int lbPosition = 0; lbPosition < inputData->size(); /* noop */)
 		{
-
-			int initialLength = std::min((unsigned int)16, inputData->size() - lbPosition);
+			int initialLength = 16;
+			if (inputData->size() - lbPosition < 16)
+				initialLength = inputData->size() - lbPosition;
 
 			for (int elementIndex = 0; elementIndex < initialLength; elementIndex++)
 				element.elements[elementIndex] = inputData->at(elementIndex + lbPosition);
@@ -90,7 +91,7 @@ namespace Project3
 			{
 				element.count = searchLength;
 
-				for (uint64_t offset = 2; offset <= windowSize; offset++)
+				for (uint64_t offset = 2; offset <= windowSize / 4; offset++)
 				{
 					if (Matches(inputData, offset, lbPosition, searchLength))
 					{

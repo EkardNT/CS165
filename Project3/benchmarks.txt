@@ -1,0 +1,25 @@
+filename			kennedy.xls			book1			news
+size				1029744 B			768771 B		377109 B
+----				----				----			----
+HUFFsiz				462857 B			438481 B		246521 B
+%save				55%					43%				35%
+t-cmprss			800 ms				500 ms			320 ms
+t-expand			60ms				80 ms			40 ms
+----				----				----			----
+LZ1siz				504574 B			422824 B		260205 B
+%save				51%					45%				31%
+t-cmprss			37100 ms			28400 ms		19600 ms
+t-expand			300 ms				450 ms			280 ms
+----				----				----			----
+LZ2siz				432492 B			407448 B		233807 B
+%save				58%					47%				38%
+t-cmprss			62400 ms			49900 ms		35100 ms
+t-expand			280 ms				260 ms			300 ms
+----				----				----			----
+LZMA2siz (7zip)		51955 B				261147 B		118941 B
+%save				95%					67%				69%
+t-cmprss			-					-				-
+t-expand			-					-				-
+
+* Times are averaged over three runs.
+** LZMA2 was run through the 7Zip GUI interface and so could not be accurately timed. All times were under a second, however.
